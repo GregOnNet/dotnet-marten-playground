@@ -1,8 +1,11 @@
 bin/
 obj/
+.idea/
+
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+*DotSettings.user 
 
 #Paket dependency manager
 paket-files/
