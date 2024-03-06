@@ -1,0 +1,10 @@
+source https://api.nuget.org/v3/index.json
+
+storage: none
+
+nuget coverlet.collector
+nuget CSharpFunctionalExtensions
+nuget FluentAssertions
+nuget Microsoft.NET.Test.Sdk 
+nuget xunit
+nuget xunit.runner.visualstudio
