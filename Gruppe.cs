@@ -2,7 +2,7 @@
 
 namespace Perosnaldisposition;
 
-public class Gruppe
+public class Gruppe: IEquatable<Gruppe>
 {
     public string Name { get; }
 
@@ -19,5 +19,28 @@ public class Gruppe
         }
 
         return Result.Success(new Gruppe(name));
+    }
+
+    public bool Equals(Gruppe? andereGruppe)
+    {
+        if (ReferenceEquals(null, andereGruppe)) return false;
+        if (ReferenceEquals(this, andereGruppe)) return true;
+        
+        return Name == andereGruppe.Name;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        
+        if (obj.GetType() != GetType()) return false;
+        
+        return Equals((Gruppe)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return Name.GetHashCode();
     }
 }

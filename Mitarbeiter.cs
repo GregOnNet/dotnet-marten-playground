@@ -64,6 +64,26 @@ public class Mitarbeiter: IEquatable<Mitarbeiter>
 
     public bool Equals(Mitarbeiter? andererMitarbeiter)
     {
-        return andererMitarbeiter?.Vorname == Vorname && andererMitarbeiter?.Nachname == Nachname;
+        if (ReferenceEquals(null, andererMitarbeiter)) return false;
+        if (ReferenceEquals(this, andererMitarbeiter)) return true;
+        
+        return andererMitarbeiter?.Vorname == Vorname 
+            && andererMitarbeiter?.Nachname == Nachname 
+            && Gruppe.Equals(andererMitarbeiter.Gruppe);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+
+        if (obj.GetType() != GetType()) return false;
+
+        return Equals((Mitarbeiter)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return $"{Vorname} {Nachname} {Gruppe.Name}".GetHashCode();
     }
 }

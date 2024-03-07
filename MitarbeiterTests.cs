@@ -103,4 +103,22 @@ public class MitarbeiterTests
 
         istDieSelbePerson.Should().BeTrue();
     }
+    
+    [Fact]
+    public void
+        Wenn_zwei_Mitarbeiter_den_selben_Vornamen_und_Nachnamen_haben_aber_in_verschiedenen_Gruppen_arbeiten_handelt_es_sich_um_verschiedene_Mitarbeiter()
+    {
+        var vorname = "Alan";
+        var nachname = "Turing";
+
+        var fruehschicht = Gruppe.Create("Frühschicht");
+        var spaetschicht = Gruppe.Create("Spätschicht");
+
+        var alan = Mitarbeiter.Create(vorname, nachname, fruehschicht.Value);
+        var auchAlan = Mitarbeiter.Create(vorname, nachname, spaetschicht.Value);
+
+        var istDieSelbePerson = alan.Value.Equals(auchAlan.Value);
+
+        istDieSelbePerson.Should().BeFalse();
+    }
 }
