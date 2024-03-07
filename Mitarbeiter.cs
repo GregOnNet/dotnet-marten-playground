@@ -12,8 +12,6 @@ public class Mitarbeiter: IEquatable<Mitarbeiter>
 
     public IEnumerable<Taetigkeit> QualifizierteTaetigkeiten { get; private set; }
     
-    public IEnumerable<Taetigkeit> ZugewieseneTaetigkeiten { get; set; }
-
     private Mitarbeiter(string vorname, string nachname, Gruppe gruppe)
     {
         Vorname = vorname;
@@ -21,7 +19,6 @@ public class Mitarbeiter: IEquatable<Mitarbeiter>
         Gruppe = gruppe;
 
         QualifizierteTaetigkeiten = Array.Empty<Taetigkeit>();
-        ZugewieseneTaetigkeiten = Array.Empty<Taetigkeit>();
     }
     
     public static Result<Mitarbeiter> Create(string vorname, string nachname, Gruppe gruppe)
@@ -42,18 +39,6 @@ public class Mitarbeiter: IEquatable<Mitarbeiter>
         }
         
         return Result.Success(new Mitarbeiter(vorname, nachname, gruppe));
-    }
-
-    public Result WeiseTaetigkeitZu(Taetigkeit taetigkeit)
-    {
-        if (IstQualifiziertFuer(taetigkeit))
-        {
-            return Result.Failure($"Dem Mitarbeiter {Vorname} {Nachname} kann die Tätigkeit {taetigkeit.Name} nicht zugewiesen werden, weil er für sie nicht qualifiziert ist.");
-        }
-
-        ZugewieseneTaetigkeiten = ZugewieseneTaetigkeiten.Append(taetigkeit);
-        
-        return Result.Success();
     }
 
     public Result QualifiziereFuer(Taetigkeit taetigkeit)

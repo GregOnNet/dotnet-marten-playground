@@ -4,11 +4,11 @@ namespace Perosnaldisposition;
 
 public class Gruppe
 {
-    private readonly string _name;
+    public string Name { get; }
 
     private Gruppe(string name)
     {
-        _name = name;
+        Name = name;
     }
     
     public static Result<Gruppe> Create(string name)

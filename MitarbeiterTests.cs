@@ -52,6 +52,7 @@ public class MitarbeiterTests
         mitarbeiter.Should().Succeed();
         mitarbeiter.Value.Vorname.Should().Be(vorname);
         mitarbeiter.Value.Nachname.Should().Be(nachname);
+        mitarbeiter.Value.Gruppe.Name.Should().Be(gruppe.Value.Name);
     }
     
     
@@ -67,41 +68,7 @@ public class MitarbeiterTests
         mitarbeiter.Value.QualifizierteTaetigkeiten.Should().BeEmpty();
     }
     
-    [Fact]
-    public void Wenn_ein_Mitarbeiter_über_keine_Qualifizierte_Taetigkeit_verfügt_kann_keine_Taetigkeit_zugewiesen_werden()
-    {
-        var vorname = "Alan";
-        var nachname = "Turing";
-        var gruppe = Gruppe.Create("Frühschicht");
-        var taetigkeit = Taetigkeit.Create("Einlagern");
-
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value).Value;
-
-        var result = mitarbeiter.WeiseTaetigkeitZu(taetigkeit.Value);
-
-        result.Should().Fail();
-    }
-    
-    [Fact]
-    public void Wenn_ein_Mitarbeiter_für_eine_Tätigkeit_qualifiziert_wird_kann_diese_Tätigkeit_zugewiesen_werden()
-    {
-        var vorname = "Alan";
-        var nachname = "Turing";
-        
-        var gruppe = Gruppe.Create("Frühschicht");
-        var taetigkeit = Taetigkeit.Create("Einlagern");
-
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
-
-        mitarbeiter.Value.QualifiziereFuer(taetigkeit.Value);
-        
-        var result = mitarbeiter.Value.WeiseTaetigkeitZu(taetigkeit.Value);
-
-        result.Should().Succeed();
-
-        mitarbeiter.Value.ZugewieseneTaetigkeiten.Should().HaveCount(1);
-    }
-    
+ 
     [Fact]
     public void Wenn_ein_Mitarbeiter_für_eine_Tätigkeit_qualifiziert_ist_kann_die_gleiche_Taetigkeit_nicht_noch_einmal_qualifiziert_werden()
     {
