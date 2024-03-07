@@ -1,0 +1,12 @@
+source https://nuget.devexpress.com/KRnkzVylD3HOyojdcxB47jYvN2qaCF7YSNy5FQdMeYvSyOCXiV/api
+source https://api.nuget.org/v3/index.json
+
+nuget Microsoft.AspNetCore.OpenApi
+nuget Swashbuckle.AspNetCore
+nuget coverlet.collector
+nuget CSharpFunctionalExtensions
+nuget CSharpFunctionalExtensions.FluentAssertions
+nuget FluentAssertions
+nuget Microsoft.NET.Test.Sdk
+nuget xunit
+nuget xunit.runner.visualstudio
