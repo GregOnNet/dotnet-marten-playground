@@ -4,3 +4,4 @@ xunit.runner.visualstudio
 coverlet.collector
 FluentAssertions
 CSharpFunctionalExtensions
+CSharpFunctionalExtensions.FluentAssertions

@@ -14,7 +14,7 @@ public class MitarbeiterTests
         
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
-        mitarbeiter.IsFailure.Should().BeTrue();
+        mitarbeiter.Should().Fail();
     }
     
     [Fact]
@@ -26,7 +26,7 @@ public class MitarbeiterTests
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
-        mitarbeiter.IsFailure.Should().BeTrue();
+        mitarbeiter.Should().Fail();
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class MitarbeiterTests
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, null);
 
-        mitarbeiter.IsFailure.Should().BeTrue();
+        mitarbeiter.Should().Fail();
     }
     
     [Fact]
@@ -49,6 +49,7 @@ public class MitarbeiterTests
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
+        mitarbeiter.Should().Succeed();
         mitarbeiter.Value.Vorname.Should().Be(vorname);
         mitarbeiter.Value.Nachname.Should().Be(nachname);
     }
@@ -61,9 +62,9 @@ public class MitarbeiterTests
         var nachname = "Musk";
         var gruppe = Gruppe.Create("Frühschicht");
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value).Value;
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
-        mitarbeiter.QualifizierteTaetigkeiten.Should().BeEmpty();
+        mitarbeiter.Value.QualifizierteTaetigkeiten.Should().BeEmpty();
     }
     
     [Fact]
@@ -78,7 +79,7 @@ public class MitarbeiterTests
 
         var result = mitarbeiter.WeiseTaetigkeitZu(taetigkeit.Value);
 
-        result.IsFailure.Should().BeTrue();
+        result.Should().Fail();
     }
     
     [Fact]
@@ -90,15 +91,15 @@ public class MitarbeiterTests
         var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value).Value;
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
-        mitarbeiter.QualifiziereFuerTaetigkeit(taetigkeit.Value);
+        mitarbeiter.Value.QualifiziereFuerTaetigkeit(taetigkeit.Value);
         
-        var result = mitarbeiter.WeiseTaetigkeitZu(taetigkeit.Value);
+        var result = mitarbeiter.Value.WeiseTaetigkeitZu(taetigkeit.Value);
 
-        result.IsSuccess.Should().BeTrue();
+        result.Should().Succeed();
 
-        mitarbeiter.ZugewieseneTaetigkeiten.Should().HaveCount(1);
+        mitarbeiter.Value.ZugewieseneTaetigkeiten.Should().HaveCount(1);
     }
     
     [Fact]
@@ -115,7 +116,7 @@ public class MitarbeiterTests
         var qualifizierung = mitarbeiter.QualifiziereFuerTaetigkeit(taetigkeit.Value);
         var doppelteQualifizierung = mitarbeiter.QualifiziereFuerTaetigkeit(taetigkeit.Value);
 
-        qualifizierung.IsSuccess.Should().BeTrue();
-        doppelteQualifizierung.IsFailure.Should().BeTrue();
+        qualifizierung.Should().Succeed();
+        doppelteQualifizierung.Should().Fail();
     }
 }

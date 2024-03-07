@@ -4,6 +4,9 @@ NUGET
     coverlet.collector (6.0)
     CSharpFunctionalExtensions (2.41)
       Microsoft.Bcl.Async (>= 1.0.168) - restriction: && (>= net40) (< net45) (< netstandard2.0)
+    CSharpFunctionalExtensions.FluentAssertions (2.0)
+      CSharpFunctionalExtensions (>= 2.37) - restriction: >= net6.0
+      FluentAssertions (>= 6.10) - restriction: >= net6.0
     FluentAssertions (6.12)
       System.Configuration.ConfigurationManager (>= 4.4) - restriction: || (&& (>= netcoreapp2.1) (< netstandard2.1)) (>= netcoreapp3.0)
       System.Threading.Tasks.Extensions (>= 4.5) - restriction: || (>= net47) (&& (< netcoreapp2.1) (>= netstandard2.0) (< netstandard2.1))
