@@ -1,7 +1,5 @@
-using CSharpFunctionalExtensions;
+using API.UseCases.Gruppe.Erfassen;
 using Marten;
-using Microsoft.AspNetCore.Mvc;
-using Perosnaldisposition;
 using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,23 +31,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/gruppe", async (CreateGruppeRequest create, [FromServices] IDocumentSession session) =>
-                       {
-                           return Gruppe.Create(create.Name)
-                                        .Tap(async gruppe =>
-                                             {
-                                                 session.Store(gruppe);
-                                                 await session.SaveChangesAsync();
-                                             })
-                                        .Finally(result => result.IsSuccess ? Results.Created() : Results.BadRequest(result.Error));
-                       })
+app.MapPost("/gruppe", ErfassenEndpoint.Handle)
    .WithOpenApi();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
 
 public record struct CreateGruppeRequest(string Name);
