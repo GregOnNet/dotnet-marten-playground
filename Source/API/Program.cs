@@ -1,3 +1,6 @@
+using Marten;
+using Weasel.Core;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+builder.Services.AddMarten(options =>
+                           {
+                               // Establish the connection string to your Marten database
+                               options.Connection(builder.Configuration.GetConnectionString("Personaldisposition")!);
+
+                               // If we're running in development mode, let Marten just take care
+                               // of all necessary schema building and patching behind the scenes
+                               if (builder.Environment.IsDevelopment())
+                                   options.AutoCreateSchemaObjects = AutoCreate.All;
+                           });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -43,7 +57,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
