@@ -4,6 +4,9 @@ namespace Perosnaldisposition;
 
 public class Mitarbeiter: IEquatable<Mitarbeiter>
 {
+
+    public Guid Id { get; set; }
+    
     public string Vorname { get; }
 
     public string Nachname { get; }

@@ -4,6 +4,8 @@ namespace Perosnaldisposition;
 
 public class Gruppe: IEquatable<Gruppe>
 {
+    public Guid Id { get; set; }
+    
     public string Name { get; }
 
     private Gruppe(string name)
