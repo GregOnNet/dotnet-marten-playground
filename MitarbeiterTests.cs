@@ -20,7 +20,7 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_ohne_Nachnamen_angelegt_wird_schlägt_dies_fehl()
     {
-        var vorname = "Elon";
+        var vorname = "Alan";
         var nachname = "";
         var gruppe = Gruppe.Create("Frühschicht");
 
@@ -32,7 +32,7 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_ohne_Gruppe_angelegt_wird_schlägt_dies_fehl()
     {
-        var vorname = "Elon";
+        var vorname = "Alan";
         var nachname = "";
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, null);
@@ -43,8 +43,8 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_mit_allen_nötigen_Informationen_angelegt_wird_funktioniert_es()
     {
-        var vorname = "Elon";
-        var nachname = "Musk";
+        var vorname = "Alan";
+        var nachname = "Turing";
         var gruppe = Gruppe.Create("Frühschicht");
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
@@ -58,8 +58,8 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_angelegt_wurde_ist_er_für_keine_Tätigkeit_qualifiziert()
     {
-        var vorname = "Elon";
-        var nachname = "Musk";
+        var vorname = "Alan";
+        var nachname = "Turing";
         var gruppe = Gruppe.Create("Frühschicht");
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
@@ -70,8 +70,8 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_über_keine_Qualifizierte_Taetigkeit_verfügt_kann_keine_Taetigkeit_zugewiesen_werden()
     {
-        var vorname = "Elon";
-        var nachname = "Musk";
+        var vorname = "Alan";
+        var nachname = "Turing";
         var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
@@ -85,15 +85,15 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_für_eine_Tätigkeit_qualifiziert_wird_kann_diese_Tätigkeit_zugewiesen_werden()
     {
-        var vorname = "Elon";
-        var nachname = "Musk";
+        var vorname = "Alan";
+        var nachname = "Turing";
         
         var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
 
-        mitarbeiter.Value.QualifiziereFuerTaetigkeit(taetigkeit.Value);
+        mitarbeiter.Value.QualifiziereFuer(taetigkeit.Value);
         
         var result = mitarbeiter.Value.WeiseTaetigkeitZu(taetigkeit.Value);
 
@@ -105,18 +105,35 @@ public class MitarbeiterTests
     [Fact]
     public void Wenn_ein_Mitarbeiter_für_eine_Tätigkeit_qualifiziert_ist_kann_die_gleiche_Taetigkeit_nicht_noch_einmal_qualifiziert_werden()
     {
-        var vorname = "Elon";
-        var nachname = "Musk";
+        var vorname = "Alan";
+        var nachname = "Turing";
         
         var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value).Value;
 
-        var qualifizierung = mitarbeiter.QualifiziereFuerTaetigkeit(taetigkeit.Value);
-        var doppelteQualifizierung = mitarbeiter.QualifiziereFuerTaetigkeit(taetigkeit.Value);
+        var qualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
+        var doppelteQualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
 
         qualifizierung.Should().Succeed();
         doppelteQualifizierung.Should().Fail();
+    }
+
+    [Fact]
+    public void
+        Wenn_zwei_Mitarbeiter_den_selben_Vornamen_und_Nachnamen_haben_sowie_in_der_gleichen_Gruppe_arbeiten_handelt_es_sich_um_den_selben_Mitarbeiter()
+    {
+        var vorname = "Alan";
+        var nachname = "Turing";
+
+        var gruppe = Gruppe.Create("Frühschicht");
+
+        var alan = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var auchAlan = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+
+        var istDieSelbePerson = alan.Value.Equals(auchAlan.Value);
+
+        istDieSelbePerson.Should().BeTrue();
     }
 }

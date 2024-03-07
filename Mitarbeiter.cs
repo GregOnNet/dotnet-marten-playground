@@ -2,7 +2,7 @@
 
 namespace Perosnaldisposition;
 
-public class Mitarbeiter
+public class Mitarbeiter: IEquatable<Mitarbeiter>
 {
     public string Vorname { get; }
 
@@ -46,9 +46,7 @@ public class Mitarbeiter
 
     public Result WeiseTaetigkeitZu(Taetigkeit taetigkeit)
     {
-        var istMitarbeiterFuerTaetigkeitQualifiziert = QualifizierteTaetigkeiten.Any(q => q.Name == taetigkeit.Name);
-        
-        if (!istMitarbeiterFuerTaetigkeitQualifiziert)
+        if (IstQualifiziertFuer(taetigkeit))
         {
             return Result.Failure($"Dem Mitarbeiter {Vorname} {Nachname} kann die Tätigkeit {taetigkeit.Name} nicht zugewiesen werden, weil er für sie nicht qualifiziert ist.");
         }
@@ -58,7 +56,7 @@ public class Mitarbeiter
         return Result.Success();
     }
 
-    public Result QualifiziereFuerTaetigkeit(Taetigkeit taetigkeit)
+    public Result QualifiziereFuer(Taetigkeit taetigkeit)
     {
         var istBereitsFuerTaetigkeitQualidizierung =
             QualifizierteTaetigkeiten.Any(qualifizierteTaetigkeit => qualifizierteTaetigkeit.Name == taetigkeit.Name);
@@ -72,5 +70,15 @@ public class Mitarbeiter
         QualifizierteTaetigkeiten = QualifizierteTaetigkeiten.Append(taetigkeit);
         
         return Result.Success();
+    }
+
+    public bool IstQualifiziertFuer(Taetigkeit taetigkeit)
+    {
+        return QualifizierteTaetigkeiten.Any(q => q.Name == taetigkeit.Name);
+    }
+
+    public bool Equals(Mitarbeiter? andererMitarbeiter)
+    {
+        return andererMitarbeiter?.Vorname == Vorname && andererMitarbeiter?.Nachname == Nachname;
     }
 }
