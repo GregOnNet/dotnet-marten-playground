@@ -1,6 +1,7 @@
 using API.UseCases.Gruppe.Auflisten;
 using API.UseCases.Gruppe.Entfernen;
 using API.UseCases.Gruppe.Erfassen;
+using API.UseCases.Gruppe.NamenKorrigieren;
 using Marten;
 using Weasel.Core;
 
@@ -39,7 +40,11 @@ app.MapGet("/gruppen", GruppenAuflistenEndpoint.Handle)
 app.MapPost("/gruppen", NeueGruppeErfassenEndpoint.Handle)
    .WithOpenApi();
 
+
 app.MapDelete("/gruppen/{id}", GruppeEntfernenEndpoint.Handle)
+   .WithOpenApi();
+
+app.MapPost("/gruppen/{id}/namens-korrektur", GruppenNamenKorrigierenEndpoint.Handle)
    .WithOpenApi();
 
 app.Run();

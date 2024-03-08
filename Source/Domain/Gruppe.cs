@@ -7,7 +7,7 @@ public class Gruppe: IEquatable<Gruppe>
 {
     public Guid Id { get; set; }
     
-    public string Name { get; }
+    public string Name { get; private set; }
 
     [JsonConstructor]
     private Gruppe(string name)
@@ -46,5 +46,17 @@ public class Gruppe: IEquatable<Gruppe>
     public override int GetHashCode()
     {
         return Name.GetHashCode();
+    }
+
+    public Result<Gruppe> KorrigiereNamen(string korrigierterName)
+    {
+        if (string.IsNullOrWhiteSpace(korrigierterName))
+        {
+            return Result.Failure<Gruppe>("Der Name einer Gruppe darf nicht leer sein.");
+        }
+
+        Name = korrigierterName;
+
+        return Result.Success(this);
     }
 }
