@@ -5,7 +5,7 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace API.UseCases.Gruppe.Erfassen;
 
-public class ErfassenEndpoint
+public class NeueGruppeErfassenEndpoint
 {
     public static async Task<IResult> Handle([FromBody] CreateGruppeRequest create,
                                              [FromServices] IDocumentSession session)
@@ -21,3 +21,5 @@ public class ErfassenEndpoint
                                                                : Results.BadRequest(result.Error));
     }
 }
+
+public record struct CreateGruppeRequest(string Name);

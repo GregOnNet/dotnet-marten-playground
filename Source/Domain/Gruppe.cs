@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
@@ -8,6 +9,7 @@ public class Gruppe: IEquatable<Gruppe>
     
     public string Name { get; }
 
+    [JsonConstructor]
     private Gruppe(string name)
     {
         Name = name;

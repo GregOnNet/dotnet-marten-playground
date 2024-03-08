@@ -1,3 +1,5 @@
+using API.UseCases.Gruppe.Auflisten;
+using API.UseCases.Gruppe.Entfernen;
 using API.UseCases.Gruppe.Erfassen;
 using Marten;
 using Weasel.Core;
@@ -31,9 +33,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/gruppe", ErfassenEndpoint.Handle)
+app.MapGet("/gruppen", GruppenAuflistenEndpoint.Handle)
+   .WithOpenApi();
+
+app.MapPost("/gruppen", NeueGruppeErfassenEndpoint.Handle)
+   .WithOpenApi();
+
+app.MapDelete("/gruppen/{id}", GruppeEntfernenEndpoint.Handle)
    .WithOpenApi();
 
 app.Run();
 
-public record struct CreateGruppeRequest(string Name);
