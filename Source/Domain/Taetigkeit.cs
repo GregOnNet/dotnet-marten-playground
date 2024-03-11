@@ -8,6 +8,7 @@ public class Taetigkeit
     [JsonConstructor]
     private Taetigkeit(string name)
     {
+        Id = Guid.Empty;
         Name = name;
     }
 

@@ -4,6 +4,7 @@ using API.UseCases.Gruppe.Erfassen;
 using API.UseCases.Gruppe.NamenKorrigieren;
 using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Erfassen;
+using API.UseCases.Mitarbeiter.Qualifizieren;
 using API.UseCases.Taetigkeiten.Auflisten;
 using API.UseCases.Taetigkeiten.Erfassen;
 using Marten;
@@ -46,10 +47,10 @@ app.MapPost("/gruppen", NeueGruppeErfassenEndpoint.Handle)
    .WithName(nameof(NeueGruppeErfassenEndpoint))
    .WithOpenApi();
 
-app.MapDelete("/gruppen/{id}", GruppeEntfernenEndpoint.Handle)
+app.MapDelete("/gruppen/{id:guid}", GruppeEntfernenEndpoint.Handle)
    .WithOpenApi();
 
-app.MapPost("/gruppen/{id}/namens-korrektur", GruppenNamenKorrigierenEndpoint.Handle)
+app.MapPost("/gruppen/{id:guid}/namens-korrektur", GruppenNamenKorrigierenEndpoint.Handle)
    .WithOpenApi();
 
 /* /mitarbeiter */
@@ -59,6 +60,10 @@ app.MapGet("/mitarbeiter", AlleMitarbeiterAuflistenEndpoint.Handle)
 
 app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
    .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
+   .WithOpenApi();
+
+app.MapPost("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:guid}", MitarbeiterFuerTaetigkeitQualifizierenEndpoint.Handle)
+   .WithName(nameof(MitarbeiterFuerTaetigkeitQualifizierenEndpoint))
    .WithOpenApi();
 
 

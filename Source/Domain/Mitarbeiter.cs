@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections;
+using System.Collections.Immutable;
 using CSharpFunctionalExtensions;
 using Newtonsoft.Json;
 
@@ -14,7 +15,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         GruppeId = gruppeId;
 
         AbweichendeArbeitszeiten = ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit>.Empty;
-        QualifizierteTaetigkeiten = Array.Empty<Taetigkeit>();
+        QualifizierteTaetigkeitenIds = ImmutableHashSet<Guid>.Empty;
     }
 
     public Guid Id { get; set; }
@@ -25,9 +26,8 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public string Nachname { get; }
 
-
     public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; private set; }
-    public IEnumerable<Taetigkeit> QualifizierteTaetigkeiten { get; private set; }
+    public ImmutableHashSet<Guid> QualifizierteTaetigkeitenIds { get; set; }
 
 
     public bool Equals(Mitarbeiter? andererMitarbeiter)
@@ -54,18 +54,18 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(new Mitarbeiter(vorname, nachname, gruppeId));
     }
 
-    public Result QualifiziereFuer(Taetigkeit taetigkeit)
+    public Result<Mitarbeiter> QualifiziereFuer(Taetigkeit taetigkeit)
     {
-        var istBereitsFuerTaetigkeitQualidizierung =
-            QualifizierteTaetigkeiten.Any(qualifizierteTaetigkeit => qualifizierteTaetigkeit.Name == taetigkeit.Name);
+        var istBereitsFuerTaetigkeitQualifizierung =
+            QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id);
 
-        if (istBereitsFuerTaetigkeitQualidizierung)
+        if (istBereitsFuerTaetigkeitQualifizierung)
             return
-                Result.Failure($"Dem Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} bereits qualifiziert");
+                Result.Failure<Mitarbeiter>($"Dem Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} bereits qualifiziert");
 
-        QualifizierteTaetigkeiten = QualifizierteTaetigkeiten.Append(taetigkeit);
+        QualifizierteTaetigkeitenIds = QualifizierteTaetigkeitenIds.Add(taetigkeit.Id);
 
-        return Result.Success();
+        return Result.Success(this);
     }
 
 
@@ -81,7 +81,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public bool IstQualifiziertFuer(Taetigkeit taetigkeit)
     {
-        return QualifizierteTaetigkeiten.Any(q => q.Name == taetigkeit.Name);
+        return QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id);
     }
 
     public override bool Equals(object? obj)

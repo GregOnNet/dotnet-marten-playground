@@ -65,7 +65,7 @@ public class MitarbeiterTests
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
-        mitarbeiter.Value.QualifizierteTaetigkeiten.Should().BeEmpty();
+        mitarbeiter.Value.QualifizierteTaetigkeitenIds.Should().BeEmpty();
     }
 
 

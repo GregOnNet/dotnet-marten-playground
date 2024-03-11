@@ -5,8 +5,15 @@ namespace API.UseCases.Gruppe.Auflisten;
 
 public class AlleGruppenAuflistenEndpoint
 {
-    public static IEnumerable<Perosnaldisposition.Gruppe> Handle([FromServices] IDocumentSession session)
+    public static IEnumerable<GruppeAuflistenReadDto> Handle([FromServices] IDocumentSession session)
     {
-        return session.Query<Perosnaldisposition.Gruppe>();
+        return session.Query<Perosnaldisposition.Gruppe>()
+                      .Select(gruppe => new GruppeAuflistenReadDto
+                                        {
+                                            Id = gruppe.Id,
+                                            Name = gruppe.Name
+                                        });
     }
 }
+
+public record struct GruppeAuflistenReadDto(Guid Id, string Name);

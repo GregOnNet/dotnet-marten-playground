@@ -10,10 +10,12 @@ public class AlleMitarbeiterAuflistenEndpoint
     public static IEnumerable<MitarbeiterAuflistenReadDto> Handle([FromServices] IDocumentSession session)
     {
         var gruppen = new Dictionary<Guid, Perosnaldisposition.Gruppe>();
+        var taetigkeiten = new Dictionary<Guid, Perosnaldisposition.Taetigkeit>();
         
         return session.Query<Perosnaldisposition.Mitarbeiter>()
                       .Include(mitarbeiter => mitarbeiter.GruppeId, gruppen)
-                      .Map(mitarbeiter => new MitarbeiterAuflistenReadDto
+                      .Include(mitarbeiter => mitarbeiter.QualifizierteTaetigkeitenIds, taetigkeiten)
+                      .Select(mitarbeiter => new MitarbeiterAuflistenReadDto
                                           {
                                               Id = mitarbeiter.Id,
                                               Vorname = mitarbeiter.Vorname,
@@ -21,8 +23,12 @@ public class AlleMitarbeiterAuflistenEndpoint
                                               // TODO: Ich weiß nicht, ob das die beste Variante ist eine Projektion zu machen.
                                               //       Ich muss extra ein Dictionary für "gruppen" anlegen.
                                               //       Die API arbeitet anders als EntityFramework.
+                                              //       (1:1 Beziehung)
                                               Gruppe = gruppen[mitarbeiter.GruppeId].Name,
-                                              QualifizierteTaetigkeiten = mitarbeiter.QualifizierteTaetigkeiten.Map(taetigkeit => taetigkeit.Name)
+                                              // TODO: Fühlt sich auch komisch an.
+                                              //       Für jedes Dokument muss ein Dictionary erzeugt werden.
+                                              //       (1:n Beziehung).
+                                              QualifizierteTaetigkeiten = mitarbeiter.QualifizierteTaetigkeitenIds.Map(id => taetigkeiten[id].Name)
                                           });
     }
 }
