@@ -4,6 +4,8 @@ using API.UseCases.Gruppe.Erfassen;
 using API.UseCases.Gruppe.NamenKorrigieren;
 using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Erfassen;
+using API.UseCases.Taetigkeiten.Auflisten;
+using API.UseCases.Taetigkeiten.Erfassen;
 using Marten;
 using Weasel.Core;
 
@@ -59,6 +61,15 @@ app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
    .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
    .WithOpenApi();
 
+
+/* /taetigkeiten */
+
+app.MapGet("/taetigkeiten", AlleTaetigkeitenAuflistenEndpoint.Handle)
+   .WithOpenApi();
+
+app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
+   .WithName(nameof(NeueTaetigkeitErfassenEndpoint))
+   .WithOpenApi();
 
 app.Run();
 
