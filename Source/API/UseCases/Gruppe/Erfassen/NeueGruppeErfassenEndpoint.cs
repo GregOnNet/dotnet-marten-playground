@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Marten;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -11,15 +12,19 @@ public class NeueGruppeErfassenEndpoint
                                              [FromServices] IDocumentSession session)
     {
         return await Perosnaldisposition.Gruppe.Create(create.Name)
-                                        .Tap(async gruppe =>
+                                        .Map(async gruppe =>
                                              {
                                                  session.Store(gruppe);
+                                            
                                                  await session.SaveChangesAsync();
+
+                                                 return new CreateGruppeResponse(gruppe.Id);
                                              })
                                         .Finally(result => result.IsSuccess
-                                                               ? Results.Created()
+                                                               ? Results.CreatedAtRoute(nameof(NeueGruppeErfassenEndpoint), result.Value.Id, result.Value)
                                                                : Results.BadRequest(result.Error));
     }
 }
 
 public record struct CreateGruppeRequest(string Name);
+public record struct CreateGruppeResponse(Guid Id);
