@@ -210,7 +210,7 @@ public class MitarbeiterTests
 
         alan.Value.Vereinbare(montagsVon8Bis14Uhr.Value);
 
-        alan.Value.LoeseArbeitszeitVereinbarungFuer(montagsVon8Bis14Uhr.Value.Tag);
+        alan.Value.RevidiereAbweichendeArbeitszeit(montagsVon8Bis14Uhr.Value.Tag);
 
         alan.Value.AbweichendeArbeitszeiten.Should().BeEmpty();
     }

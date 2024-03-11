@@ -26,7 +26,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public string Nachname { get; }
 
-    public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; private set; }
+    public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; set; }
     public ImmutableHashSet<Guid> QualifizierteTaetigkeitenIds { get; set; }
 
 
@@ -83,9 +83,11 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(this);
     }
 
-    public void LoeseArbeitszeitVereinbarungFuer(DayOfWeek tag)
+    public Result<Mitarbeiter> RevidiereAbweichendeArbeitszeit(DayOfWeek tag)
     {
         AbweichendeArbeitszeiten = AbweichendeArbeitszeiten.Remove(tag);
+
+        return Result.Success(this);
     }
 
     public bool IstQualifiziertFuer(Taetigkeit taetigkeit)

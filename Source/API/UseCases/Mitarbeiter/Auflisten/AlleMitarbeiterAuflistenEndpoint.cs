@@ -7,7 +7,7 @@ namespace API.UseCases.Mitarbeiter.Auflisten;
 
 public class AlleMitarbeiterAuflistenEndpoint
 {
-    public static IEnumerable<MitarbeiterAuflistenReadDto> Handle([FromServices] IDocumentSession session)
+    public static IEnumerable<MitarbeiterAuflistenDto> Handle([FromServices] IDocumentSession session)
     {
         var gruppen = new Dictionary<Guid, Perosnaldisposition.Gruppe>();
         var taetigkeiten = new Dictionary<Guid, Perosnaldisposition.Taetigkeit>();
@@ -15,7 +15,7 @@ public class AlleMitarbeiterAuflistenEndpoint
         return session.Query<Perosnaldisposition.Mitarbeiter>()
                       .Include(mitarbeiter => mitarbeiter.GruppeId, gruppen)
                       .Include(mitarbeiter => mitarbeiter.QualifizierteTaetigkeitenIds, taetigkeiten)
-                      .Map(mitarbeiter => new MitarbeiterAuflistenReadDto
+                      .Map(mitarbeiter => new MitarbeiterAuflistenDto
                                           {
                                               Id = mitarbeiter.Id,
                                               Vorname = mitarbeiter.Vorname,
@@ -33,4 +33,4 @@ public class AlleMitarbeiterAuflistenEndpoint
     }
 }
 
-public record struct MitarbeiterAuflistenReadDto(Guid Id, string Vorname, string Nachname, string Gruppe, IEnumerable<string> QualifizierteTaetigkeiten);
+public record struct MitarbeiterAuflistenDto(Guid Id, string Vorname, string Nachname, string Gruppe, IEnumerable<string> QualifizierteTaetigkeiten);

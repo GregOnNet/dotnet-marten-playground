@@ -4,6 +4,7 @@ using API.UseCases.Gruppe.Erfassen;
 using API.UseCases.Gruppe.NamenKorrigieren;
 using API.UseCases.Mitarbeiter.Arbeitszeiten;
 using API.UseCases.Mitarbeiter.Auflisten;
+using API.UseCases.Mitarbeiter.Details;
 using API.UseCases.Mitarbeiter.Erfassen;
 using API.UseCases.Mitarbeiter.Qualifizieren;
 using API.UseCases.Taetigkeiten.Auflisten;
@@ -59,6 +60,9 @@ app.MapPost("/gruppen/{id:guid}/namens-korrektur", GruppenNamenKorrigierenEndpoi
 app.MapGet("/mitarbeiter", AlleMitarbeiterAuflistenEndpoint.Handle)
    .WithOpenApi();
 
+app.MapGet("/mitarbeiter/{id:guid}", MitarbeiterDetailsEndpoint.Handle)
+   .WithOpenApi();
+
 app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
    .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
    .WithOpenApi();
@@ -74,6 +78,9 @@ app.MapDelete("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:g
 
 app.MapPost("/mitarbeiter/{id:guid}/abweichende-arbeitszeiten/{tag}", AbweichendeArbeitszeitErfassenEndpoint.Handle)
    .WithName(nameof(AbweichendeArbeitszeitErfassenEndpoint))
+   .WithOpenApi();
+
+app.MapDelete("/mitarbeiter/{id:guid}/abweichende-arbeitszeiten/{tag}", AbweichendeArbeitszeitRevidierenEndpoint.Handle)
    .WithOpenApi();
 
 /* /taetigkeiten */
