@@ -1,14 +1,12 @@
 ﻿using System.Collections.Immutable;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
 public class Mitarbeiter : IEquatable<Mitarbeiter>
 {
-    // TODO: Wieso kann ich diesen Konstruktor nicht private machen?
-    //       private + [JsonConstructor], wie bei Gruppe funktioniert nicht.
-    //       Fehler: A class should either have a default constructor, one constructor with arguments or a constructor marked with the JsonConstructor attribute. Path 'Id', line 1, position 6.
-    //       see: https://martendb.io/configuration/json.html#non-public-members-storage
+    [JsonConstructor]
     public Mitarbeiter(string vorname, string nachname, Guid gruppeId)
     {
         Vorname = vorname;
