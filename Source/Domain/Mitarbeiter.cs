@@ -61,7 +61,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
         if (istBereitsFuerTaetigkeitQualifizierung)
             return
-                Result.Failure<Mitarbeiter>($"Dem Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} bereits qualifiziert");
+                Result.Failure<Mitarbeiter>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} bereits qualifiziert");
 
         QualifizierteTaetigkeitenIds = QualifizierteTaetigkeitenIds.Add(taetigkeit.Id);
 
