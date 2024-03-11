@@ -15,7 +15,7 @@ public class AlleMitarbeiterAuflistenEndpoint
         return session.Query<Perosnaldisposition.Mitarbeiter>()
                       .Include(mitarbeiter => mitarbeiter.GruppeId, gruppen)
                       .Include(mitarbeiter => mitarbeiter.QualifizierteTaetigkeitenIds, taetigkeiten)
-                      .Select(mitarbeiter => new MitarbeiterAuflistenReadDto
+                      .Map(mitarbeiter => new MitarbeiterAuflistenReadDto
                                           {
                                               Id = mitarbeiter.Id,
                                               Vorname = mitarbeiter.Vorname,

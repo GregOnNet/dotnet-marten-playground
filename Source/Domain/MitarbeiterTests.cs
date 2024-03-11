@@ -89,6 +89,37 @@ public class MitarbeiterTests
 
     [Fact]
     public void
+        Wenn_ein_Mitarbeiter_für_eine_Tätigkeit_qualifiziert_ist_kann_diese_entzogen_werden()
+    {
+        var vorname = "Alan";
+        var nachname = "Turing";
+
+        var taetigkeit = Taetigkeit.Create("Einlagern");
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid()).Value;
+
+        mitarbeiter.QualifiziereFuer(taetigkeit.Value);
+        mitarbeiter.EntzieheQualifikationFuer(taetigkeit.Value);
+
+        mitarbeiter.QualifizierteTaetigkeitenIds.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void
+        Wenn_ein_Mitarbeiter_für__keine__Tätigkeit_qualifiziert_passiert_bei_Entzug_einer_qualifizierten_Tätigkeit_nichts()
+    {
+        var vorname = "Alan";
+        var nachname = "Turing";
+
+        var taetigkeit = Taetigkeit.Create("Einlagern");
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid()).Value;
+
+        mitarbeiter.EntzieheQualifikationFuer(taetigkeit.Value);
+
+        mitarbeiter.QualifizierteTaetigkeitenIds.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void
         Wenn_zwei_Mitarbeiter_den_selben_Vornamen_und_Nachnamen_haben_sowie_in_der_gleichen_Gruppe_arbeiten_handelt_es_sich_um_den_selben_Mitarbeiter()
     {
         var vorname = "Alan";
@@ -140,7 +171,7 @@ public class MitarbeiterTests
 
         alan.Value.AbweichendeArbeitszeiten.Should().HaveCount(1);
     }
-    
+
     [Fact]
     public void
         Wenn_für_einen_Mitarbeiter_eine_abweichende_Arbeitszeit_vereinbart_wurde_und_diese_verändert_wird_gelingt_dies()
@@ -157,13 +188,13 @@ public class MitarbeiterTests
         var montagsVon6Bis12Uhr =
             AbweichendeArbeitszeit.Create(DayOfWeek.Monday, TimeOnly.Parse("06:00:00"), TimeOnly.Parse("12:00:00"));
 
-        
+
         alan.Value.Vereinbare(montagsVon8Bis14Uhr.Value);
         alan.Value.Vereinbare(montagsVon6Bis12Uhr.Value);
 
         alan.Value.AbweichendeArbeitszeiten[DayOfWeek.Monday].Beginn.Should().Be(TimeOnly.Parse("06:00:00"));
     }
-    
+
     [Fact]
     public void
         Wenn_für_einen_Mitarbeiter_eine_abweichende_Arbeitszeit_vereinbart_wurde_und_diese_gelöst_wird_gelingt_dies()

@@ -66,6 +66,10 @@ app.MapPost("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:gui
    .WithName(nameof(MitarbeiterFuerTaetigkeitQualifizierenEndpoint))
    .WithOpenApi();
 
+app.MapDelete("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:guid}",
+              MitarbeiterQualifikationEntziehenEndpoint.Handle)
+   .WithOpenApi();
+
 
 /* /taetigkeiten */
 

@@ -68,6 +68,13 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(this);
     }
 
+    public Result<Mitarbeiter> EntzieheQualifikationFuer(Taetigkeit taetigkeit)
+    {
+        QualifizierteTaetigkeitenIds = QualifizierteTaetigkeitenIds.Remove(taetigkeit.Id);
+
+        return Result.Success(this);
+    }
+
 
     public void Vereinbare(AbweichendeArbeitszeit abweichendeArbeitszeit)
     {
@@ -98,4 +105,6 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
     {
         return $"{Vorname} {Nachname} {GruppeId}".GetHashCode();
     }
+
+
 }
