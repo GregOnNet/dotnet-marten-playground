@@ -6,6 +6,7 @@ using API.UseCases.Mitarbeiter.Arbeitszeiten;
 using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Details;
 using API.UseCases.Mitarbeiter.Erfassen;
+using API.UseCases.Mitarbeiter.Gruppe;
 using API.UseCases.Mitarbeiter.Qualifizieren;
 using API.UseCases.Taetigkeiten.Auflisten;
 using API.UseCases.Taetigkeiten.Erfassen;
@@ -81,6 +82,9 @@ app.MapPost("/mitarbeiter/{id:guid}/abweichende-arbeitszeiten/{tag}", Abweichend
    .WithOpenApi();
 
 app.MapDelete("/mitarbeiter/{id:guid}/abweichende-arbeitszeiten/{tag}", AbweichendeArbeitszeitRevidierenEndpoint.Handle)
+   .WithOpenApi();
+
+app.MapPatch("/mitarbeiter/{id:guid}/gruppe/{gruppeId:guid}", MitarbeiterWechseltInAndereGruppeEndpoint.Handle)
    .WithOpenApi();
 
 /* /taetigkeiten */

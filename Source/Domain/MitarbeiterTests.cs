@@ -39,6 +39,22 @@ public class MitarbeiterTests
 
         mitarbeiter.Should().Fail();
     }
+    
+    [Fact]
+    public void Wenn_ein_Mitarbeiter_in_eine_andere_Gruppe_wechselt_ist_dies_möglich()
+    {
+        var vorname = "Alan";
+        var nachname = "Turing";
+
+        
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid());
+
+        var andereGruppe = Gruppe.Create("Gruppe 2");
+
+        var mitarbeiterNachWechselInAndereGruppe = mitarbeiter.Value.WechselInGruppe(andereGruppe.Value);
+
+        mitarbeiterNachWechselInAndereGruppe.Should().Succeed();
+    }
 
     [Fact]
     public void Wenn_ein_Mitarbeiter_mit_allen_nötigen_Informationen_angelegt_wird_funktioniert_es()

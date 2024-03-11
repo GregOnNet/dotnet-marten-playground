@@ -8,6 +8,7 @@ public class Gruppe : IEquatable<Gruppe>
     [JsonConstructor]
     private Gruppe(string name)
     {
+        Id = Guid.NewGuid();
         Name = name;
     }
 

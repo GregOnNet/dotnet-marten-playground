@@ -20,7 +20,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public Guid Id { get; set; }
 
-    public Guid GruppeId { get; }
+    public Guid GruppeId { get; private set; }
 
     public string Vorname { get; }
 
@@ -90,6 +90,16 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(this);
     }
 
+    public Result<Mitarbeiter> WechselInGruppe(Gruppe gruppe)
+    {
+        if (gruppe.Id == Guid.Empty)
+            return Result.Failure<Mitarbeiter>($"Die Id \"{gruppe.Id}\" ist ungültig.");
+
+        GruppeId = gruppe.Id;
+
+        return Result.Success(this);
+    }
+
     public bool IstQualifiziertFuer(Taetigkeit taetigkeit)
     {
         return QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id);
@@ -107,8 +117,6 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public override int GetHashCode()
     {
-        return $"{Vorname} {Nachname} {GruppeId}".GetHashCode();
+        return $"{Vorname} {Nachname}".GetHashCode();
     }
-
-
 }
