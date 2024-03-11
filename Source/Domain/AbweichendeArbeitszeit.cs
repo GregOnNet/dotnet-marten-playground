@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
@@ -8,6 +9,7 @@ public class AbweichendeArbeitszeit
     public TimeOnly Beginn { get; }
     public TimeOnly Ende { get; }
 
+    [JsonConstructor]
     private AbweichendeArbeitszeit(DayOfWeek tag, TimeOnly beginn, TimeOnly ende)
     {
         Tag = tag;

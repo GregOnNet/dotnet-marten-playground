@@ -2,6 +2,7 @@ using API.UseCases.Gruppe.Auflisten;
 using API.UseCases.Gruppe.Entfernen;
 using API.UseCases.Gruppe.Erfassen;
 using API.UseCases.Gruppe.NamenKorrigieren;
+using API.UseCases.Mitarbeiter.Arbeitszeiten;
 using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Erfassen;
 using API.UseCases.Mitarbeiter.Qualifizieren;
@@ -62,7 +63,8 @@ app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
    .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
    .WithOpenApi();
 
-app.MapPost("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:guid}", MitarbeiterFuerTaetigkeitQualifizierenEndpoint.Handle)
+app.MapPost("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:guid}",
+            MitarbeiterFuerTaetigkeitQualifizierenEndpoint.Handle)
    .WithName(nameof(MitarbeiterFuerTaetigkeitQualifizierenEndpoint))
    .WithOpenApi();
 
@@ -70,6 +72,9 @@ app.MapDelete("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:g
               MitarbeiterQualifikationEntziehenEndpoint.Handle)
    .WithOpenApi();
 
+app.MapPost("/mitarbeiter/{id:guid}/abweichende-arbeitszeiten/{tag}", AbweichendeArbeitszeitErfassenEndpoint.Handle)
+   .WithName(nameof(AbweichendeArbeitszeitErfassenEndpoint))
+   .WithOpenApi();
 
 /* /taetigkeiten */
 
@@ -81,4 +86,3 @@ app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
    .WithOpenApi();
 
 app.Run();
-

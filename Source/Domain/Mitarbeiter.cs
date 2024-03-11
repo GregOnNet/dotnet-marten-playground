@@ -76,9 +76,11 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
     }
 
 
-    public void Vereinbare(AbweichendeArbeitszeit abweichendeArbeitszeit)
+    public Result<Mitarbeiter> Vereinbare(AbweichendeArbeitszeit abweichendeArbeitszeit)
     {
         AbweichendeArbeitszeiten = AbweichendeArbeitszeiten.SetItem(abweichendeArbeitszeit.Tag, abweichendeArbeitszeit);
+
+        return Result.Success(this);
     }
 
     public void LoeseArbeitszeitVereinbarungFuer(DayOfWeek tag)
