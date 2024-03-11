@@ -96,4 +96,5 @@ app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
    .WithName(nameof(NeueTaetigkeitErfassenEndpoint))
    .WithOpenApi();
 
+
 app.Run();

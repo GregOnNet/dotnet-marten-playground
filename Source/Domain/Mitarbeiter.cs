@@ -10,6 +10,8 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
     [JsonConstructor]
     public Mitarbeiter(string vorname, string nachname, Guid gruppeId)
     {
+        Id = Guid.NewGuid();
+        
         Vorname = vorname;
         Nachname = nachname;
         GruppeId = gruppeId;
