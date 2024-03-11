@@ -9,10 +9,10 @@ public class MitarbeiterTests
     {
         var vorname = "";
         var nachname = "";
-        var gruppe = Gruppe.Create("Frühschicht");
+        var gruppeId = Guid.NewGuid();
 
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
         mitarbeiter.Should().Fail();
     }
@@ -22,9 +22,9 @@ public class MitarbeiterTests
     {
         var vorname = "Alan";
         var nachname = "";
-        var gruppe = Gruppe.Create("Frühschicht");
+        var gruppeId = Guid.NewGuid();
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
         mitarbeiter.Should().Fail();
     }
@@ -35,7 +35,7 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "";
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, null);
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.Empty);
 
         mitarbeiter.Should().Fail();
     }
@@ -45,14 +45,14 @@ public class MitarbeiterTests
     {
         var vorname = "Alan";
         var nachname = "Turing";
-        var gruppe = Gruppe.Create("Frühschicht");
+        var gruppeId = Guid.NewGuid();
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
         mitarbeiter.Should().Succeed();
         mitarbeiter.Value.Vorname.Should().Be(vorname);
         mitarbeiter.Value.Nachname.Should().Be(nachname);
-        mitarbeiter.Value.Gruppe.Name.Should().Be(gruppe.Value.Name);
+        mitarbeiter.Value.GruppeId.Should().Be(gruppeId);
     }
 
 
@@ -61,9 +61,9 @@ public class MitarbeiterTests
     {
         var vorname = "Alan";
         var nachname = "Turing";
-        var gruppe = Gruppe.Create("Frühschicht");
+        var gruppeId = Guid.NewGuid();
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
         mitarbeiter.Value.QualifizierteTaetigkeiten.Should().BeEmpty();
     }
@@ -76,10 +76,9 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "Turing";
 
-        var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
-        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, gruppe.Value).Value;
+        var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid()).Value;
 
         var qualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
         var doppelteQualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
@@ -95,10 +94,10 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "Turing";
 
-        var gruppe = Gruppe.Create("Frühschicht");
+        var gruppeId = Guid.NewGuid();
 
-        var alan = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
-        var auchAlan = Mitarbeiter.Create(vorname, nachname, gruppe.Value);
+        var alan = Mitarbeiter.Create(vorname, nachname, gruppeId);
+        var auchAlan = Mitarbeiter.Create(vorname, nachname, gruppeId);
 
         var istDieSelbePerson = alan.Value.Equals(auchAlan.Value);
 
@@ -112,11 +111,11 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "Turing";
 
-        var fruehschicht = Gruppe.Create("Frühschicht");
-        var spaetschicht = Gruppe.Create("Spätschicht");
+        var fruehschichtId = Guid.NewGuid();
+        var spaetschichtId = Guid.NewGuid();
 
-        var alan = Mitarbeiter.Create(vorname, nachname, fruehschicht.Value);
-        var auchAlan = Mitarbeiter.Create(vorname, nachname, spaetschicht.Value);
+        var alan = Mitarbeiter.Create(vorname, nachname, fruehschichtId);
+        var auchAlan = Mitarbeiter.Create(vorname, nachname, spaetschichtId);
 
         var istDieSelbePerson = alan.Value.Equals(auchAlan.Value);
 
@@ -132,7 +131,7 @@ public class MitarbeiterTests
 
         var fruehschicht = Gruppe.Create("Frühschicht");
 
-        var alan = Mitarbeiter.Create(vorname, nachname, fruehschicht.Value);
+        var alan = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid());
 
         var montagsVon8Bis14Uhr =
             AbweichendeArbeitszeit.Create(DayOfWeek.Monday, TimeOnly.Parse("08:00:00"), TimeOnly.Parse("14:00:00"));
@@ -149,9 +148,8 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "Turing";
 
-        var fruehschicht = Gruppe.Create("Frühschicht");
 
-        var alan = Mitarbeiter.Create(vorname, nachname, fruehschicht.Value);
+        var alan = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid());
 
         var montagsVon8Bis14Uhr =
             AbweichendeArbeitszeit.Create(DayOfWeek.Monday, TimeOnly.Parse("08:00:00"), TimeOnly.Parse("14:00:00"));
@@ -173,9 +171,8 @@ public class MitarbeiterTests
         var vorname = "Alan";
         var nachname = "Turing";
 
-        var fruehschicht = Gruppe.Create("Frühschicht");
 
-        var alan = Mitarbeiter.Create(vorname, nachname, fruehschicht.Value);
+        var alan = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid());
 
         var montagsVon8Bis14Uhr =
             AbweichendeArbeitszeit.Create(DayOfWeek.Monday, TimeOnly.Parse("08:00:00"), TimeOnly.Parse("14:00:00"));

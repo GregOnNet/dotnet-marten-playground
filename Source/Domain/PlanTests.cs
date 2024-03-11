@@ -39,9 +39,8 @@ public class PlanTests
         var heute = DateOnly.FromDateTime(DateTime.Today);
         var plan = Plan.Create(heute);
 
-        var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
-        var mitarbeiter = Mitarbeiter.Create("Alan", "Turing", gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
         
         mitarbeiter.Value.QualifiziereFuer(taetigkeit.Value);
         
@@ -57,9 +56,8 @@ public class PlanTests
         var heute = DateOnly.FromDateTime(DateTime.Today);
         var plan = Plan.Create(heute);
 
-        var gruppe = Gruppe.Create("Frühschicht");
         var taetigkeit = Taetigkeit.Create("Einlagern");
-        var mitarbeiter = Mitarbeiter.Create("Alan", "Turing", gruppe.Value);
+        var mitarbeiter = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
         
         mitarbeiter.Value.QualifiziereFuer(taetigkeit.Value);
         

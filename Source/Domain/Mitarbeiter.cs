@@ -5,11 +5,11 @@ namespace Perosnaldisposition;
 
 public class Mitarbeiter : IEquatable<Mitarbeiter>
 {
-    private Mitarbeiter(string vorname, string nachname, Gruppe gruppe)
+    private Mitarbeiter(string vorname, string nachname, Guid gruppeId)
     {
         Vorname = vorname;
         Nachname = nachname;
-        Gruppe = gruppe;
+        GruppeId = gruppeId;
 
         AbweichendeArbeitszeiten = ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit>.Empty;
         QualifizierteTaetigkeiten = Array.Empty<Taetigkeit>();
@@ -17,11 +17,12 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public Guid Id { get; set; }
 
+    public Guid GruppeId { get; }
+    
     public string Vorname { get; }
 
     public string Nachname { get; }
 
-    public Gruppe Gruppe { get; }
 
     public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; set; }
     public IEnumerable<Taetigkeit> QualifizierteTaetigkeiten { get; private set; }
@@ -34,10 +35,10 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
         return andererMitarbeiter?.Vorname == Vorname
             && andererMitarbeiter?.Nachname == Nachname
-            && Gruppe.Equals(andererMitarbeiter.Gruppe);
+            && andererMitarbeiter.GruppeId == GruppeId;
     }
 
-    public static Result<Mitarbeiter> Create(string vorname, string nachname, Gruppe gruppe)
+    public static Result<Mitarbeiter> Create(string vorname, string nachname, Guid gruppeId)
     {
         if (string.IsNullOrWhiteSpace(vorname))
             return Result.Failure<Mitarbeiter>("Bitte geben Sie den Vornamen des Mitarbeiters an.");
@@ -45,9 +46,9 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         if (string.IsNullOrWhiteSpace(nachname))
             return Result.Failure<Mitarbeiter>("Bitte geben Sie den Nachnamen des Mitarbeiters an.");
 
-        if (gruppe is null) return Result.Failure<Mitarbeiter>("Bitte weisen Sie dem Mitarbeiter eine Gruppe zu.");
+        if (gruppeId == Guid.Empty) return Result.Failure<Mitarbeiter>("Bitte weisen Sie dem Mitarbeiter eine Gruppe zu.");
 
-        return Result.Success(new Mitarbeiter(vorname, nachname, gruppe));
+        return Result.Success(new Mitarbeiter(vorname, nachname, gruppeId));
     }
 
     public Result QualifiziereFuer(Taetigkeit taetigkeit)
@@ -92,6 +93,6 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public override int GetHashCode()
     {
-        return $"{Vorname} {Nachname} {Gruppe.Name}".GetHashCode();
+        return $"{Vorname} {Nachname} {GruppeId}".GetHashCode();
     }
 }
