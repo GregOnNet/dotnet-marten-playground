@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.UseCases.Gruppe.Auflisten;
 
-public class GruppenAuflistenEndpoint
+public class AlleGruppenAuflistenEndpoint
 {
     public static IEnumerable<Perosnaldisposition.Gruppe> Handle([FromServices] IDocumentSession session)
     {

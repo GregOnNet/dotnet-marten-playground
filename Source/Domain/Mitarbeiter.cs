@@ -5,7 +5,11 @@ namespace Perosnaldisposition;
 
 public class Mitarbeiter : IEquatable<Mitarbeiter>
 {
-    private Mitarbeiter(string vorname, string nachname, Guid gruppeId)
+    // TODO: Wieso kann ich diesen Konstruktor nicht private machen?
+    //       private + [JsonConstructor], wie bei Gruppe funktioniert nicht.
+    //       Fehler: A class should either have a default constructor, one constructor with arguments or a constructor marked with the JsonConstructor attribute. Path 'Id', line 1, position 6.
+    //       see: https://martendb.io/configuration/json.html#non-public-members-storage
+    public Mitarbeiter(string vorname, string nachname, Guid gruppeId)
     {
         Vorname = vorname;
         Nachname = nachname;
@@ -18,13 +22,13 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
     public Guid Id { get; set; }
 
     public Guid GruppeId { get; }
-    
+
     public string Vorname { get; }
 
     public string Nachname { get; }
 
 
-    public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; set; }
+    public ImmutableDictionary<DayOfWeek, AbweichendeArbeitszeit> AbweichendeArbeitszeiten { get; private set; }
     public IEnumerable<Taetigkeit> QualifizierteTaetigkeiten { get; private set; }
 
 
@@ -46,7 +50,8 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         if (string.IsNullOrWhiteSpace(nachname))
             return Result.Failure<Mitarbeiter>("Bitte geben Sie den Nachnamen des Mitarbeiters an.");
 
-        if (gruppeId == Guid.Empty) return Result.Failure<Mitarbeiter>("Bitte weisen Sie dem Mitarbeiter eine Gruppe zu.");
+        if (gruppeId == Guid.Empty)
+            return Result.Failure<Mitarbeiter>("Bitte weisen Sie dem Mitarbeiter eine Gruppe zu.");
 
         return Result.Success(new Mitarbeiter(vorname, nachname, gruppeId));
     }

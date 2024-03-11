@@ -2,6 +2,7 @@ using API.UseCases.Gruppe.Auflisten;
 using API.UseCases.Gruppe.Entfernen;
 using API.UseCases.Gruppe.Erfassen;
 using API.UseCases.Gruppe.NamenKorrigieren;
+using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Erfassen;
 using Marten;
 using Weasel.Core;
@@ -36,7 +37,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 /* /gruppen */
-app.MapGet("/gruppen", GruppenAuflistenEndpoint.Handle)
+app.MapGet("/gruppen", AlleGruppenAuflistenEndpoint.Handle)
    .WithOpenApi();
 
 app.MapPost("/gruppen", NeueGruppeErfassenEndpoint.Handle)
@@ -51,9 +52,13 @@ app.MapPost("/gruppen/{id}/namens-korrektur", GruppenNamenKorrigierenEndpoint.Ha
 
 /* /mitarbeiter */
 
+app.MapGet("/mitarbeiter", AlleMitarbeiterAuflistenEndpoint.Handle)
+   .WithOpenApi();
+
 app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
    .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
    .WithOpenApi();
+
 
 app.Run();
 
