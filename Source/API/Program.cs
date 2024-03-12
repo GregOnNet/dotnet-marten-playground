@@ -8,6 +8,7 @@ using API.UseCases.Mitarbeiter.Details;
 using API.UseCases.Mitarbeiter.Erfassen;
 using API.UseCases.Mitarbeiter.Gruppe;
 using API.UseCases.Mitarbeiter.Qualifizieren;
+using API.UseCases.Plaene;
 using API.UseCases.Taetigkeiten.Auflisten;
 using API.UseCases.Taetigkeiten.Erfassen;
 using Marten;
@@ -94,6 +95,11 @@ app.MapGet("/taetigkeiten", AlleTaetigkeitenAuflistenEndpoint.Handle)
 
 app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
    .WithName(nameof(NeueTaetigkeitErfassenEndpoint))
+   .WithOpenApi();
+
+/* /plaene */
+app.MapPost("/plaene", NeuenPlanErfassenEndpoint.Handle)
+   .WithName(nameof(NeuenPlanErfassenEndpoint))
    .WithOpenApi();
 
 

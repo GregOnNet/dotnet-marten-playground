@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions.ValueTasks;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
+using Perosnaldisposition;
 
 namespace API.UseCases.Taetigkeiten.Erfassen;
 
@@ -9,7 +10,7 @@ public class NeueTaetigkeitErfassenEndpoint
     public static async Task<IResult> Handle([FromBody] CreateTaetigkeitRequest create,
                                              [FromServices] IDocumentSession session)
     {
-        return await Perosnaldisposition.Taetigkeit.Create(create.name)
+        return await Taetigkeit.Create(create.name)
                                         .Map(async taetigkeit =>
                                              {
                                                  session.Store(taetigkeit);

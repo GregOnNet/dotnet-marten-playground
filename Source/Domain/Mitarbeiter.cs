@@ -58,8 +58,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
     public Result<Mitarbeiter> QualifiziereFuer(Taetigkeit taetigkeit)
     {
-        var istBereitsFuerTaetigkeitQualifizierung =
-            QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id);
+        var istBereitsFuerTaetigkeitQualifizierung = QualifizierteTaetigkeitenIds.Contains(taetigkeit.Id);
 
         if (istBereitsFuerTaetigkeitQualifizierung)
             return
