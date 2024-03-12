@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Perosnaldisposition;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
-namespace API.UseCases.Plaene;
+namespace API.UseCases.Plaene.Erfassen;
 
 public class NeuenPlanErfassenEndpoint
 {

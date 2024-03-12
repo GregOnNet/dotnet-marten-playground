@@ -1,14 +1,15 @@
 ﻿using JasperFx.Core;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
+using Perosnaldisposition;
 
-namespace API.UseCases.Gruppe.Auflisten;
+namespace API.UseCases.Gruppen.Auflisten;
 
 public class AlleGruppenAuflistenEndpoint
 {
     public static IEnumerable<GruppeAuflistenReadDto> Handle([FromServices] IDocumentSession session)
     {
-        return session.Query<Perosnaldisposition.Gruppe>()
+        return session.Query<Gruppe>()
                       .Map(gruppe => new GruppeAuflistenReadDto
                                         {
                                             Id = gruppe.Id,

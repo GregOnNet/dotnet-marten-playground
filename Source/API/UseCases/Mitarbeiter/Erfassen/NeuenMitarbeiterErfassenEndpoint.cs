@@ -1,5 +1,4 @@
-﻿using API.UseCases.Gruppe.Erfassen;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 using IResult = Microsoft.AspNetCore.Http.IResult;

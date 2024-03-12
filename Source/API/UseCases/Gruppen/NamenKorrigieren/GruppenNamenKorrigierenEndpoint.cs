@@ -1,9 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
+using Perosnaldisposition;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
-namespace API.UseCases.Gruppe.NamenKorrigieren;
+namespace API.UseCases.Gruppen.NamenKorrigieren;
 
 public class GruppenNamenKorrigierenEndpoint
 {
@@ -11,12 +12,12 @@ public class GruppenNamenKorrigierenEndpoint
                                              [FromBody] KorrigiereGruppenNameRequest korrektur,
                                              [FromServices] IDocumentSession session)
     {
-        var d = await session.LoadAsync<Perosnaldisposition.Gruppe>(id);
-        
-        return await Result.Try(() => session.LoadAsync<Perosnaldisposition.Gruppe>(id))
+        var d = await session.LoadAsync<Gruppe>(id);
+
+        return await Result.Try(() => session.LoadAsync<Gruppe>(id))
                            .Ensure(gruppe => gruppe?.Id == id,
                                    $"Es wurde keine Gruppe mit der Id {id} gefunden.")
-                           .Bind(gruppe => gruppe!.KorrigiereNamen(korrektur.name))
+                           .Bind(gruppe => gruppe!.KorrigiereNamen(korrektur.Name))
                            .MapTry(gruppe =>
                                    {
                                        session.Store(gruppe);
@@ -26,4 +27,4 @@ public class GruppenNamenKorrigierenEndpoint
     }
 }
 
-public record struct KorrigiereGruppenNameRequest(string name);
+public record struct KorrigiereGruppenNameRequest(string Name);
