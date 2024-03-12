@@ -103,5 +103,9 @@ app.MapPost("/plaene", NeuenPlanErfassenEndpoint.Handle)
    .WithName(nameof(NeuenPlanErfassenEndpoint))
    .WithOpenApi();
 
+app.MapPost("/plaene/{tag}/abwesenheiten", AbwesenheitFuerMitarbeiterErfassenEndpoint.Handle)
+   .WithName(nameof(AbwesenheitFuerMitarbeiterErfassenEndpoint))
+   .WithOpenApi();
+
 
 app.Run();

@@ -1,25 +1,35 @@
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
 public class Disposition
 {
-    public Mitarbeiter Mitarbeiter { get; }
-    public Taetigkeit Taetigkeit { get; }
-
-    private Disposition(Mitarbeiter mitarbeiter, Taetigkeit taetigkeit)
+    [JsonConstructor]
+    private Disposition(Mitarbeiter mitarbeiter, IEnumerable<Taetigkeit> taetigkeiten)
     {
         Mitarbeiter = mitarbeiter;
-        Taetigkeit = taetigkeit;
+        TaetigkeitenIds = taetigkeiten.Select(taetigkeit => taetigkeit.Id);
     }
+
+    public Mitarbeiter Mitarbeiter { get; }
+
+    public IEnumerable<Guid> TaetigkeitenIds { get; set; }
 
     public static Result<Disposition> Create(Mitarbeiter mitarbeiter, Taetigkeit taetigkeit)
     {
-        if (mitarbeiter.IstQualifiziertFuer(taetigkeit))
-        {
-            return Result.Success(new Disposition(mitarbeiter, taetigkeit));
-        }
-        
-        return Result.Failure<Disposition>($"Der Mitarbeiter {mitarbeiter.Vorname} {mitarbeiter.Nachname} ist für die Tätigkeit {taetigkeit.Name} nicht qualifiziert.");
+        return mitarbeiter
+              .IstQualifiziert(taetigkeit)
+              .Map(qualifizierteTaetigkeit => new Disposition(mitarbeiter, [qualifizierteTaetigkeit]))
+              .MapError(reason => reason);
+    }
+
+    public static Result<Disposition> Create(Mitarbeiter mitarbeiter,
+                                             IEnumerable<Taetigkeit> taetigkeiten)
+    {
+        return taetigkeiten
+              .Select(taetigkeit => mitarbeiter.IstQualifiziert(taetigkeit)).Combine(", ")
+              .Map(qualifizierteTaetigkeiten => new Disposition(mitarbeiter, qualifizierteTaetigkeiten))
+              .MapError(reason => reason);
     }
 }

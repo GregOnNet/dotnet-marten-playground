@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using CSharpFunctionalExtensions;
 using Newtonsoft.Json;
 
@@ -11,7 +10,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
     public Mitarbeiter(string vorname, string nachname, Guid gruppeId)
     {
         Id = Guid.NewGuid();
-        
+
         Vorname = vorname;
         Nachname = nachname;
         GruppeId = gruppeId;
@@ -56,7 +55,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(new Mitarbeiter(vorname, nachname, gruppeId));
     }
 
-    public Result<Mitarbeiter> QualifiziereFuer(Taetigkeit taetigkeit)
+    public Result<Mitarbeiter> Qualifiziere(Taetigkeit taetigkeit)
     {
         var istBereitsFuerTaetigkeitQualifizierung = QualifizierteTaetigkeitenIds.Contains(taetigkeit.Id);
 
@@ -101,9 +100,13 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         return Result.Success(this);
     }
 
-    public bool IstQualifiziertFuer(Taetigkeit taetigkeit)
+    public Result<Taetigkeit> IstQualifiziert(Taetigkeit taetigkeit)
     {
-        return QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id);
+        if (QualifizierteTaetigkeitenIds.Any(taetigkeitId => taetigkeitId == taetigkeit.Id))
+            return Result.Success(taetigkeit);
+
+        return
+            Result.Failure<Taetigkeit>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} nicht qualifiziert.");
     }
 
     public override bool Equals(object? obj)

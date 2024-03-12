@@ -23,7 +23,7 @@ public class MitarbeiterFuerTaetigkeitQualifizierenEndpoint
             return Results.BadRequest($"Die Tätigkeit mit der Id \"{taetigkeitId}\" wurde nicht gefunden");
 
         return await mitarbeiter
-                    .QualifiziereFuer(taetigkeit)
+                    .Qualifiziere(taetigkeit)
                     .Map(async qualifizierterMitarbeiter =>
                          {
                              session.Store(qualifizierterMitarbeiter);

@@ -12,7 +12,7 @@ public class Plan
         Id = Guid.NewGuid();
 
         Tag = tag;
-        Dispositionen = Array.Empty<Disposition>();
+        Dispositionen = ImmutableDictionary<Guid, Disposition>.Empty;
         AbwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
     }
 
@@ -20,7 +20,7 @@ public class Plan
 
     public DateOnly Tag { get; }
 
-    public IEnumerable<Disposition> Dispositionen { get; set; }
+    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; set; }
 
     public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; set; }
 
@@ -35,11 +35,40 @@ public class Plan
 
     public Result Disponiere(Disposition neueDisposition)
     {
-        if (Dispositionen.Any(disposition => disposition.Mitarbeiter.Equals(neueDisposition.Mitarbeiter)))
-            return
-                Result.Failure($"Der Mitarbeiter {neueDisposition.Mitarbeiter.Vorname} {neueDisposition.Mitarbeiter.Nachname} kann nicht mehrfach disponiert werden.");
+        var istMitarbeiterAbwesend =
+            AbwesendeMitarbeiterIds.Any(mitarbeiterId => mitarbeiterId == neueDisposition.Mitarbeiter.Id);
 
-        Dispositionen = Dispositionen.Append(neueDisposition);
+        if (istMitarbeiterAbwesend)
+            return
+                Result.Failure<Plan>($"{neueDisposition.Mitarbeiter.Vorname} {neueDisposition.Mitarbeiter.Nachname} kann wegen eingetragener Abwesenheit nicht disponiert werden.");
+
+        if (Dispositionen.ContainsKey(neueDisposition.Mitarbeiter.Id))
+        {
+            if (neueDisposition.TaetigkeitenIds.Count() > 1)
+            {
+                Dispositionen = Dispositionen.SetItem(neueDisposition.Mitarbeiter.Id, neueDisposition);
+            }
+            else
+            {
+                var dispositionAktualisiert = Dispositionen[neueDisposition.Mitarbeiter.Id];
+
+                dispositionAktualisiert.TaetigkeitenIds = dispositionAktualisiert.TaetigkeitenIds
+                   .Select((id, index) =>
+                               index == 0
+                                   ? neueDisposition
+                                    .TaetigkeitenIds
+                                    .First()
+                                   : id)
+                   .Distinct();
+
+                Dispositionen = Dispositionen.SetItem(neueDisposition.Mitarbeiter.Id, dispositionAktualisiert);
+            }
+        }
+        else
+        {
+            Dispositionen = Dispositionen.Add(neueDisposition.Mitarbeiter.Id, neueDisposition);
+        }
+
 
         return Result.Success();
     }

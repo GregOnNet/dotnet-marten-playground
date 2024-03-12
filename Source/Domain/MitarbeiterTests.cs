@@ -96,8 +96,8 @@ public class MitarbeiterTests
 
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid()).Value;
 
-        var qualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
-        var doppelteQualifizierung = mitarbeiter.QualifiziereFuer(taetigkeit.Value);
+        var qualifizierung = mitarbeiter.Qualifiziere(taetigkeit.Value);
+        var doppelteQualifizierung = mitarbeiter.Qualifiziere(taetigkeit.Value);
 
         qualifizierung.Should().Succeed();
         doppelteQualifizierung.Should().Fail();
@@ -113,7 +113,7 @@ public class MitarbeiterTests
         var taetigkeit = Taetigkeit.Create("Einlagern");
         var mitarbeiter = Mitarbeiter.Create(vorname, nachname, Guid.NewGuid()).Value;
 
-        mitarbeiter.QualifiziereFuer(taetigkeit.Value);
+        mitarbeiter.Qualifiziere(taetigkeit.Value);
         mitarbeiter.EntzieheQualifikationFuer(taetigkeit.Value);
 
         mitarbeiter.QualifizierteTaetigkeitenIds.Should().BeEmpty();
