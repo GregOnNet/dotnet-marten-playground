@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
@@ -16,13 +16,13 @@ public class Plan
         AbwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
 
     public DateOnly Tag { get; }
 
-    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; set; }
+    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; private set; }
 
-    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; set; }
+    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; private set; }
 
     public static Result<Plan> Create(DateOnly tag)
     {
@@ -53,13 +53,11 @@ public class Plan
                 var dispositionAktualisiert = Dispositionen[disposition.MitarbeiterId];
 
                 dispositionAktualisiert.TaetigkeitenIds = dispositionAktualisiert.TaetigkeitenIds
-                   .Select((id, index) =>
-                               index == 0
-                                   ? disposition
-                                    .TaetigkeitenIds
-                                    .First()
-                                   : id)
-                   .Distinct();
+                   .Select((id, index) => index == 0
+                                              ? disposition.TaetigkeitenIds.First()
+                                              : id)
+                   .Distinct()
+                   .ToList();
 
                 Dispositionen = Dispositionen.SetItem(disposition.MitarbeiterId, dispositionAktualisiert);
             }

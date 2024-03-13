@@ -10,6 +10,6 @@ public class TaetigkeitTests
         var name = "";
         var result = Taetigkeit.Create(name);
 
-        result.IsFailure.Should().BeTrue();
+        result.Should().Fail();
     }
 }

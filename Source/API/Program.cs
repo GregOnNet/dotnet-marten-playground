@@ -1,3 +1,4 @@
+using API;
 using API.UseCases.Gruppen.Auflisten;
 using API.UseCases.Gruppen.Entfernen;
 using API.UseCases.Gruppen.Erfassen;
@@ -8,27 +9,15 @@ using API.UseCases.Mitarbeiter.Details;
 using API.UseCases.Mitarbeiter.Erfassen;
 using API.UseCases.Mitarbeiter.Gruppe;
 using API.UseCases.Mitarbeiter.Qualifizieren;
-using API.UseCases.Plaene;
 using API.UseCases.Plaene.Details;
 using API.UseCases.Plaene.Dispositionieren;
 using API.UseCases.Plaene.Erfassen;
 using API.UseCases.Taetigkeiten.Auflisten;
 using API.UseCases.Taetigkeiten.Erfassen;
-using Marten;
-using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMarten(options =>
-                           {
-                               // Establish the connection string to your Marten database
-                               options.Connection(builder.Configuration.GetConnectionString("Personaldisposition")!);
-
-                               // If we're running in development mode, let Marten just take care
-                               // of all necessary schema building and patching behind the scenes
-                               if (builder.Environment.IsDevelopment())
-                                   options.AutoCreateSchemaObjects = AutoCreate.All;
-                           }).UseLightweightSessions();
+Setup.Marten(builder.Environment, builder.Services, builder.Configuration.GetConnectionString("Personaldisposition")!);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,15 +50,15 @@ app.MapPost("/gruppen/{id:guid}/namens-korrektur", GruppenNamenKorrigierenEndpoi
    .WithOpenApi();
 
 /* /mitarbeiter */
+var mitarbeiter = app.MapGroup("/mitarbeiter").WithOpenApi();
 
-app.MapGet("/mitarbeiter", AlleMitarbeiterAuflistenEndpoint.Handle)
-   .WithOpenApi();
+mitarbeiter.MapGet("", AlleMitarbeiterAuflistenEndpoint.Handle);
 
 app.MapGet("/mitarbeiter/{id:guid}", MitarbeiterDetailsEndpoint.Handle)
+   .WithName(nameof(MitarbeiterDetailsEndpoint))
    .WithOpenApi();
 
 app.MapPost("/mitarbeiter", NeuenMitarbeiterErfassenEndpoint.Handle)
-   .WithName(nameof(NeuenMitarbeiterErfassenEndpoint))
    .WithOpenApi();
 
 app.MapPost("/mitarbeiter/{id:guid}/qualifizierte-taetigkeiten/{taetigkeitId:guid}",
@@ -102,6 +91,7 @@ app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
 
 /* /plaene */
 app.MapGet("/plaene/{tag}", PlanDetailsEndpoint.Handle)
+   .WithName(nameof(PlanDetailsEndpoint))
    .WithOpenApi();
 
 app.MapPost("/plaene", NeuenPlanErfassenEndpoint.Handle)

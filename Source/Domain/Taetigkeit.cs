@@ -1,5 +1,5 @@
-﻿using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using CSharpFunctionalExtensions;
 
 namespace Perosnaldisposition;
 
@@ -12,7 +12,7 @@ public class Taetigkeit
         Name = name;
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
     
     public string Name { get; }
 

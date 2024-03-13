@@ -1,5 +1,5 @@
-﻿using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using CSharpFunctionalExtensions;
 
 namespace Perosnaldisposition;
 

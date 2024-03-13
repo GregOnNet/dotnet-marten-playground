@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
 
 namespace Perosnaldisposition;
 
@@ -19,7 +19,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         QualifizierteTaetigkeitenIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
 
     public Guid GruppeId { get; private set; }
 
