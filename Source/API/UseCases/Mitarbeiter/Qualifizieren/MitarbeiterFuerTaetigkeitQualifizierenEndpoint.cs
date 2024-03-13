@@ -1,4 +1,5 @@
-﻿using API.UseCases.Mitarbeiter.Erfassen;
+﻿using API.UseCases.Mitarbeiter.Details;
+using API.UseCases.Mitarbeiter.Erfassen;
 using CSharpFunctionalExtensions;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +37,8 @@ public class MitarbeiterFuerTaetigkeitQualifizierenEndpoint
                          })
                     .Finally(result => result.IsSuccess
                                            ? Results
-                                              .CreatedAtRoute(nameof(NeuenMitarbeiterErfassenEndpoint),
-                                                              result.Value.Id,
+                                              .CreatedAtRoute(nameof(MitarbeiterDetailsEndpoint),
+                                                              new { id = result.Value.Id },
                                                               result.Value)
                                            : Results
                                               .BadRequest(result.Error));

@@ -12,7 +12,7 @@ public class Taetigkeit
         Name = name;
     }
 
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
     
     public string Name { get; }
 

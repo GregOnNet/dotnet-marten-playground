@@ -16,13 +16,13 @@ public class Plan
         AbwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
 
     public DateOnly Tag { get; }
 
-    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; private set; }
+    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; set; }
 
-    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; private set; }
+    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; set; }
 
     public static Result<Plan> Create(DateOnly tag)
     {
@@ -56,8 +56,7 @@ public class Plan
                    .Select((id, index) => index == 0
                                               ? disposition.TaetigkeitenIds.First()
                                               : id)
-                   .Distinct()
-                   .ToList();
+                   .Distinct();
 
                 Dispositionen = Dispositionen.SetItem(disposition.MitarbeiterId, dispositionAktualisiert);
             }

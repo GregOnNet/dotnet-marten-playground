@@ -6,14 +6,14 @@ namespace Perosnaldisposition;
 public class Disposition
 {
     [JsonConstructor]
-    private Disposition(Guid mitarbeiterId, IList<Guid> taetigkeitenIds)
+    private Disposition(Guid mitarbeiterId, IEnumerable<Guid> taetigkeitenIds)
     {
         MitarbeiterId = mitarbeiterId;
         TaetigkeitenIds = taetigkeitenIds;
     }
 
     public Guid MitarbeiterId { get; }
-    public IList<Guid> TaetigkeitenIds { get; set; }
+    public IEnumerable<Guid> TaetigkeitenIds { get; set; }
 
     public static Result<Disposition> Create(Mitarbeiter mitarbeiter, Taetigkeit taetigkeit)
     {
@@ -31,12 +31,7 @@ public class Disposition
               .Map(qualifizierteTaetigkeiten =>
                        new Disposition(
                                        mitarbeiter.Id,
-                                       // TODO: We use .ToList(), because we persist Data with Marten
-                                       //       CSharpFunctionalExtension's Combine yields a SelectListIterator<Result<Taetigkeit>, Taetigkeit>
-                                       //       Marten persists type information in order to instantiate and hydrate instances of the stored data.
-                                       //       In the end Newtonsoft. JSON cannot create a list contains Result<T>.
-                                       //       After calling .ToList() the Result-type is gone.
-                                       qualifizierteTaetigkeiten.Select(taetigkeit => taetigkeit.Id).ToList()
+                                       qualifizierteTaetigkeiten.Select(taetigkeit => taetigkeit.Id)
                                       )
                   )
               .MapError(reason => reason);

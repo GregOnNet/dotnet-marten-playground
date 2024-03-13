@@ -19,7 +19,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         QualifizierteTaetigkeitenIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
 
     public Guid GruppeId { get; private set; }
 
