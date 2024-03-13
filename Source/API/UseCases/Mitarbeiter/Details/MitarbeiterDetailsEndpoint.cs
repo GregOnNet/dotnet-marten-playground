@@ -7,7 +7,7 @@ namespace API.UseCases.Mitarbeiter.Details;
 
 public class MitarbeiterDetailsEndpoint
 {
-    public static MitarbeiterDetailsDto Handle(Guid id, IDocumentSession session)
+    public static MitarbeiterDetailsResponse Handle(Guid id, IDocumentSession session)
     {
         var gruppen = new Dictionary<Guid, Perosnaldisposition.Gruppe>();
         var taetigkeiten = new Dictionary<Guid, Taetigkeit>();
@@ -17,7 +17,7 @@ public class MitarbeiterDetailsEndpoint
                                  .Include(mitarbeiter => mitarbeiter.QualifizierteTaetigkeitenIds, taetigkeiten)
                                  .Single(candidate => candidate.Id == id);
 
-        return new MitarbeiterDetailsDto
+        return new MitarbeiterDetailsResponse
                {
                    Id = mitarbeiter.Id,
                    Vorname = mitarbeiter.Vorname,
@@ -31,7 +31,7 @@ public class MitarbeiterDetailsEndpoint
     }
 }
 
-public record struct MitarbeiterDetailsDto(
+public record struct MitarbeiterDetailsResponse(
     Guid Id,
     string Vorname,
     string Nachname,

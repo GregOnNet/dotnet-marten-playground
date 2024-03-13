@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using API.UseCases.Mitarbeiter.Details;
+using CSharpFunctionalExtensions;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 using IResult = Microsoft.AspNetCore.Http.IResult;
@@ -14,16 +15,19 @@ public class NeuenMitarbeiterErfassenEndpoint
                                         .Map(async mitarbeiter =>
                                              {
                                                  session.Store(mitarbeiter);
-                                            
+
                                                  await session.SaveChangesAsync();
 
                                                  return new CreateMitarbeiterResponse(mitarbeiter.Id);
                                              })
                                         .Finally(result => result.IsSuccess
-                                                               ? Results.CreatedAtRoute(nameof(NeuenMitarbeiterErfassenEndpoint), result.Value.Id, result.Value)
+                                                               ? Results
+                                                                  .CreatedAtRoute(nameof(MitarbeiterDetailsEndpoint),
+                                                                       new { id = result.Value.Id }, result.Value)
                                                                : Results.BadRequest(result.Error));
     }
 }
 
 public record struct CreateMitarbeiterRequest(Guid GruppeId, string Vorname, string Nachname);
+
 public record struct CreateMitarbeiterResponse(Guid Id);
