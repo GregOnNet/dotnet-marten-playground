@@ -9,6 +9,8 @@ using API.UseCases.Mitarbeiter.Erfassen;
 using API.UseCases.Mitarbeiter.Gruppe;
 using API.UseCases.Mitarbeiter.Qualifizieren;
 using API.UseCases.Plaene;
+using API.UseCases.Plaene.Details;
+using API.UseCases.Plaene.Dispositionieren;
 using API.UseCases.Plaene.Erfassen;
 using API.UseCases.Taetigkeiten.Auflisten;
 using API.UseCases.Taetigkeiten.Erfassen;
@@ -99,6 +101,9 @@ app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
    .WithOpenApi();
 
 /* /plaene */
+app.MapGet("/plaene/{tag}", PlanDetailsEndpoint.Handle)
+   .WithOpenApi();
+
 app.MapPost("/plaene", NeuenPlanErfassenEndpoint.Handle)
    .WithName(nameof(NeuenPlanErfassenEndpoint))
    .WithOpenApi();
@@ -107,5 +112,7 @@ app.MapPost("/plaene/{tag}/abwesenheiten", AbwesenheitFuerMitarbeiterErfassenEnd
    .WithName(nameof(AbwesenheitFuerMitarbeiterErfassenEndpoint))
    .WithOpenApi();
 
+app.MapPut("/plaene/{tag}/dispositionen", MitarbeiterDisponierenEndpoint.Handle)
+   .WithOpenApi();
 
 app.Run();

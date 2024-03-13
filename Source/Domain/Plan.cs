@@ -33,44 +33,44 @@ public class Plan
         return Result.Success(new Plan(tag));
     }
 
-    public Result Disponiere(Disposition neueDisposition)
+    public Result<Plan> Disponiere(Disposition disposition)
     {
         var istMitarbeiterAbwesend =
-            AbwesendeMitarbeiterIds.Any(mitarbeiterId => mitarbeiterId == neueDisposition.Mitarbeiter.Id);
+            AbwesendeMitarbeiterIds.Any(mitarbeiterId => mitarbeiterId == disposition.MitarbeiterId);
 
         if (istMitarbeiterAbwesend)
             return
-                Result.Failure<Plan>($"{neueDisposition.Mitarbeiter.Vorname} {neueDisposition.Mitarbeiter.Nachname} kann wegen eingetragener Abwesenheit nicht disponiert werden.");
+                Result.Failure<Plan>($"Der Mitarbeiter mit der Id {disposition.MitarbeiterId} kann, wegen eingetragener Abwesenheit, nicht disponiert werden.");
 
-        if (Dispositionen.ContainsKey(neueDisposition.Mitarbeiter.Id))
+        if (Dispositionen.ContainsKey(disposition.MitarbeiterId))
         {
-            if (neueDisposition.TaetigkeitenIds.Count() > 1)
+            if (disposition.TaetigkeitenIds.Count() > 1)
             {
-                Dispositionen = Dispositionen.SetItem(neueDisposition.Mitarbeiter.Id, neueDisposition);
+                Dispositionen = Dispositionen.SetItem(disposition.MitarbeiterId, disposition);
             }
             else
             {
-                var dispositionAktualisiert = Dispositionen[neueDisposition.Mitarbeiter.Id];
+                var dispositionAktualisiert = Dispositionen[disposition.MitarbeiterId];
 
                 dispositionAktualisiert.TaetigkeitenIds = dispositionAktualisiert.TaetigkeitenIds
                    .Select((id, index) =>
                                index == 0
-                                   ? neueDisposition
+                                   ? disposition
                                     .TaetigkeitenIds
                                     .First()
                                    : id)
                    .Distinct();
 
-                Dispositionen = Dispositionen.SetItem(neueDisposition.Mitarbeiter.Id, dispositionAktualisiert);
+                Dispositionen = Dispositionen.SetItem(disposition.MitarbeiterId, dispositionAktualisiert);
             }
         }
         else
         {
-            Dispositionen = Dispositionen.Add(neueDisposition.Mitarbeiter.Id, neueDisposition);
+            Dispositionen = Dispositionen.Add(disposition.MitarbeiterId, disposition);
         }
 
 
-        return Result.Success();
+        return Result.Success(this);
     }
 
     public Result<Plan> BeruecksichtigeAbwesenheitVon(Mitarbeiter mitarbeiter)

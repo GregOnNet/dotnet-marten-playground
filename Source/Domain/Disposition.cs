@@ -6,21 +6,20 @@ namespace Perosnaldisposition;
 public class Disposition
 {
     [JsonConstructor]
-    private Disposition(Mitarbeiter mitarbeiter, IEnumerable<Taetigkeit> taetigkeiten)
+    private Disposition(Guid mitarbeiterId, IList<Guid> taetigkeitenIds)
     {
-        Mitarbeiter = mitarbeiter;
-        TaetigkeitenIds = taetigkeiten.Select(taetigkeit => taetigkeit.Id);
+        MitarbeiterId = mitarbeiterId;
+        TaetigkeitenIds = taetigkeitenIds;
     }
 
-    public Mitarbeiter Mitarbeiter { get; }
-
-    public IEnumerable<Guid> TaetigkeitenIds { get; set; }
+    public Guid MitarbeiterId { get; }
+    public IList<Guid> TaetigkeitenIds { get; set; }
 
     public static Result<Disposition> Create(Mitarbeiter mitarbeiter, Taetigkeit taetigkeit)
     {
         return mitarbeiter
               .IstQualifiziert(taetigkeit)
-              .Map(qualifizierteTaetigkeit => new Disposition(mitarbeiter, [qualifizierteTaetigkeit]))
+              .Map(qualifizierteTaetigkeit => new Disposition(mitarbeiter.Id, [qualifizierteTaetigkeit.Id]))
               .MapError(reason => reason);
     }
 
@@ -29,7 +28,17 @@ public class Disposition
     {
         return taetigkeiten
               .Select(taetigkeit => mitarbeiter.IstQualifiziert(taetigkeit)).Combine(", ")
-              .Map(qualifizierteTaetigkeiten => new Disposition(mitarbeiter, qualifizierteTaetigkeiten))
+              .Map(qualifizierteTaetigkeiten =>
+                       new Disposition(
+                                       mitarbeiter.Id,
+                                       // TODO: We use .ToList(), because we persist Data with Marten
+                                       //       CSharpFunctionalExtension's Combine yields a SelectListIterator<Result<Taetigkeit>, Taetigkeit>
+                                       //       Marten persists type information in order to instantiate and hydrate instances of the stored data.
+                                       //       In the end Newtonsoft. JSON cannot create a list contains Result<T>.
+                                       //       After calling .ToList() the Result-type is gone.
+                                       qualifizierteTaetigkeiten.Select(taetigkeit => taetigkeit.Id).ToList()
+                                      )
+                  )
               .MapError(reason => reason);
     }
 }
