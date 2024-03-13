@@ -1,3 +1,5 @@
 Microsoft.AspNetCore.OpenApi
 Swashbuckle.AspNetCore
 Marten
+Microsoft.Extensions.Hosting
+Testcontainers.PostgreSql
