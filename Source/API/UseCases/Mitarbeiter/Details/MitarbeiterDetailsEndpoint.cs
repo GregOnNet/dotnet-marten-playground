@@ -26,7 +26,7 @@ public class MitarbeiterDetailsEndpoint
                    AbweichendeArbeitszeiten = mitarbeiter.AbweichendeArbeitszeiten,
                    QualifizierteTaetigkeiten =
                        mitarbeiter.QualifizierteTaetigkeitenIds
-                                  .Map(taetigkeitenId => taetigkeiten[taetigkeitenId].Name)
+                                  .Map(taetigkeitenId => taetigkeiten[taetigkeitenId].Bezeichnung)
                };
     }
 }

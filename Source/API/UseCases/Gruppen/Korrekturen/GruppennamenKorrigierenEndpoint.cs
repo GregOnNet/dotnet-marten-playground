@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Perosnaldisposition;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
-namespace API.UseCases.Gruppen.NamenKorrigieren;
+namespace API.UseCases.Gruppen.Korrekturen;
 
-public class GruppenNamenKorrigierenEndpoint
+public class GruppennamenKorrigierenEndpoint
 {
     public static async Task<IResult> Handle(Guid id,
                                              [FromBody] KorrigiereGruppenNameRequest korrektur,

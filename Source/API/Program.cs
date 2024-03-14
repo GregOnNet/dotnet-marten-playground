@@ -2,7 +2,7 @@ using API;
 using API.UseCases.Gruppen.Auflisten;
 using API.UseCases.Gruppen.Entfernen;
 using API.UseCases.Gruppen.Erfassen;
-using API.UseCases.Gruppen.NamenKorrigieren;
+using API.UseCases.Gruppen.Korrekturen;
 using API.UseCases.Mitarbeiter.Arbeitszeiten;
 using API.UseCases.Mitarbeiter.Auflisten;
 using API.UseCases.Mitarbeiter.Details;
@@ -13,7 +13,9 @@ using API.UseCases.Plaene.Details;
 using API.UseCases.Plaene.Dispositionieren;
 using API.UseCases.Plaene.Erfassen;
 using API.UseCases.Taetigkeiten.Auflisten;
+using API.UseCases.Taetigkeiten.Details;
 using API.UseCases.Taetigkeiten.Erfassen;
+using API.UseCases.Taetigkeiten.Korrektur;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +48,7 @@ app.MapPost("/gruppen", NeueGruppeErfassenEndpoint.Handle)
 app.MapDelete("/gruppen/{id:guid}", GruppeEntfernenEndpoint.Handle)
    .WithOpenApi();
 
-app.MapPost("/gruppen/{id:guid}/namens-korrektur", GruppenNamenKorrigierenEndpoint.Handle)
+app.MapPost("/gruppen/{id:guid}/namens-korrektur", GruppennamenKorrigierenEndpoint.Handle)
    .WithOpenApi();
 
 /* /mitarbeiter */
@@ -82,12 +84,15 @@ app.MapPatch("/mitarbeiter/{id:guid}/gruppe/{gruppeId:guid}", MitarbeiterWechsel
 
 /* /taetigkeiten */
 
-app.MapGet("/taetigkeiten", AlleTaetigkeitenAuflistenEndpoint.Handle)
-   .WithOpenApi();
+var taetigkeiten = app.MapGroup("/taetigkeiten").WithOpenApi();
 
-app.MapPost("/taetigkeiten", NeueTaetigkeitErfassenEndpoint.Handle)
-   .WithName(nameof(NeueTaetigkeitErfassenEndpoint))
-   .WithOpenApi();
+taetigkeiten.MapGet("", AlleTaetigkeitenAuflistenEndpoint.Handle);
+taetigkeiten.MapGet("{id}", TaetigkeitDetailsEndpoint.Handle);
+
+taetigkeiten.MapPost("", NeueTaetigkeitErfassenEndpoint.Handle)
+            .WithName(nameof(NeueTaetigkeitErfassenEndpoint));
+
+taetigkeiten.MapPost("{id:guid}/bezeichnung-korrektur", TaetigkeitBezeichnungKorrigierenEndpoint.Handle);
 
 /* /plaene */
 app.MapGet("/plaene/{tag}", PlanDetailsEndpoint.Handle)

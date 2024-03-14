@@ -28,7 +28,7 @@ public class AlleMitarbeiterAuflistenEndpoint
                                               // TODO: Fühlt sich auch komisch an.
                                               //       Für jedes Dokument muss ein Dictionary erzeugt werden.
                                               //       (1:n Beziehung).
-                                              QualifizierteTaetigkeiten = mitarbeiter.QualifizierteTaetigkeitenIds.Map(id => taetigkeiten[id].Name)
+                                              QualifizierteTaetigkeiten = mitarbeiter.QualifizierteTaetigkeitenIds.Map(id => taetigkeiten[id].Bezeichnung)
                                           });
     }
 }

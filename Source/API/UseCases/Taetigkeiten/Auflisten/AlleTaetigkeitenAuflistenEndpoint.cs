@@ -13,7 +13,7 @@ public class AlleTaetigkeitenAuflistenEndpoint
                       .Map(mitarbeiter => new TaetigkeitenAuflistenReadDto
                                           {
                                               Id = mitarbeiter.Id,
-                                              Name = mitarbeiter.Name,
+                                              Name = mitarbeiter.Bezeichnung,
                                           });
     }
 }
