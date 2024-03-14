@@ -154,11 +154,11 @@ public class PlanTests
         var plan = Plan.Create(heute);
         var alan = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
 
-        var planMitAbwesenheit = plan.Value.BeruecksichtigeAbwesenheitVon(alan.Value);
+        var planMitAbwesenheit = plan.Value.VermerkeAusfallVonMitarbeiter(alan.Value);
 
         planMitAbwesenheit.Should().Succeed();
 
-        planMitAbwesenheit.Value.AbwesendeMitarbeiterIds.Should().HaveCount(1);
+        planMitAbwesenheit.Value.AusgefalleneMitarbeiterIds.Should().HaveCount(1);
     }
 
     [Fact]
@@ -169,13 +169,13 @@ public class PlanTests
         var plan = Plan.Create(heute);
         var alan = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
 
-        var planMitAbwesenheit = plan.Value.BeruecksichtigeAbwesenheitVon(alan.Value);
-        var planMitAbwesenheitFuerGleichenTagNochmal = plan.Value.BeruecksichtigeAbwesenheitVon(alan.Value);
+        var planMitAbwesenheit = plan.Value.VermerkeAusfallVonMitarbeiter(alan.Value);
+        var planMitAbwesenheitFuerGleichenTagNochmal = plan.Value.VermerkeAusfallVonMitarbeiter(alan.Value);
 
         planMitAbwesenheit.Should().Succeed();
         planMitAbwesenheitFuerGleichenTagNochmal.Should().Succeed();
 
-        planMitAbwesenheitFuerGleichenTagNochmal.Value.AbwesendeMitarbeiterIds.Should().HaveCount(1);
+        planMitAbwesenheitFuerGleichenTagNochmal.Value.AusgefalleneMitarbeiterIds.Should().HaveCount(1);
     }
 
     [Fact]
@@ -187,7 +187,7 @@ public class PlanTests
         var taetigkeit = Taetigkeit.Create("Einlagern");
 
         alan.Value.Qualifiziere(taetigkeit.Value);
-        plan.Value.BeruecksichtigeAbwesenheitVon(alan.Value);
+        plan.Value.VermerkeAusfallVonMitarbeiter(alan.Value);
 
         var disposition = Disposition.Create(alan.Value, taetigkeit.Value);
 
@@ -195,4 +195,55 @@ public class PlanTests
 
         planMitDisposition.Should().Fail();
     }
+
+    [Fact]
+    public void Wenn_ein_Plan_erzeugt_ist_kann_ein_Mitarbeiter_eingebucht_werden_um_zu_zeigen_das_er_auf_Arbeit_ist()
+    {
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var plan = Plan.Create(heute);
+        var alan = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
+
+        var planMitEingebuchtenMitarbeiter = plan.Value.BucheMitarbeiterEin(alan.Value);
+
+        planMitEingebuchtenMitarbeiter.Should();
+        planMitEingebuchtenMitarbeiter.Value.AnwesendeMitarbeiterIds.Should().Contain(alan.Value.Id);
+    }
+    
+    [Fact]
+    public void Wenn_ein_Mitarbeiter_noch_nicht_anwesend_ist_aber_auch_nicht_ausgefallen_ist_darf_er_schon_disponiert_werden()
+    {
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var plan = Plan.Create(heute);
+        var alan = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
+        var taetigkeit = Taetigkeit.Create("Einlagern");
+
+        alan.Value.Qualifiziere(taetigkeit.Value);
+
+        var disposition = Disposition.Create(alan.Value, taetigkeit.Value);
+
+        var planMitDisposition = plan.Value.Disponiere(disposition.Value);
+
+        planMitDisposition.Should().Succeed();
+    }
+    
+    [Fact]
+    public void Wenn_für_einen_Mitarbeiter_ein_Ausfall_vermerkt_ist_dieser_aber_auch_eingebucht_wurde_gilt_er_als_anwesend_und_kann_disponiert_werden()
+    {
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var plan = Plan.Create(heute);
+        var alan = Mitarbeiter.Create("Alan", "Turing", Guid.NewGuid());
+        var taetigkeit = Taetigkeit.Create("Einlagern");
+
+        alan.Value.Qualifiziere(taetigkeit.Value);
+
+        plan.Value.VermerkeAusfallVonMitarbeiter(alan.Value);
+        plan.Value.BucheMitarbeiterEin(alan.Value);
+
+        var disposition = Disposition.Create(alan.Value, taetigkeit.Value);
+
+        var planMitDisposition = plan.Value.Disponiere(disposition.Value);
+
+        planMitDisposition.Should().Succeed();
+    }
+    
 }

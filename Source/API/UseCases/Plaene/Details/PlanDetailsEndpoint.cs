@@ -16,7 +16,7 @@ public class PlanDetailsEndpoint
         return new PlanDetailsResponse
                {
                    Id = plan.Id,
-                   AbwesendeMitarbeiterIds = plan.AbwesendeMitarbeiterIds,
+                   AbwesendeMitarbeiterIds = plan.AusgefalleneMitarbeiterIds,
                    Dispositionen = plan.Dispositionen
                };
     }

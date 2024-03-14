@@ -13,18 +13,19 @@ public class Plan
 
         Tag = tag;
         Dispositionen = ImmutableDictionary<Guid, Disposition>.Empty;
-        AbwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
+        AusgefalleneMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
+        AnwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
     }
 
     public Guid Id { get; init; }
 
     public DateOnly Tag { get; }
 
-    [JsonInclude]
-    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; private set; }
+    [JsonInclude] public ImmutableDictionary<Guid, Disposition> Dispositionen { get; private set; }
 
-    [JsonInclude]
-    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; private set; }
+    [JsonInclude] public ImmutableHashSet<Guid> AusgefalleneMitarbeiterIds { get; private set; }
+
+    [JsonInclude] public ImmutableHashSet<Guid> AnwesendeMitarbeiterIds { get; private set; }
 
     public static Result<Plan> Create(DateOnly tag)
     {
@@ -37,10 +38,11 @@ public class Plan
 
     public Result<Plan> Disponiere(Disposition disposition)
     {
-        var istMitarbeiterAbwesend =
-            AbwesendeMitarbeiterIds.Any(mitarbeiterId => mitarbeiterId == disposition.MitarbeiterId);
+        var mitarbeiterKannNichtDisponiertWerden =
+            MitarbeiterIstNichtEingebucht(disposition) &&
+            MitarbeiterIstAusgefallen(disposition);
 
-        if (istMitarbeiterAbwesend)
+        if (mitarbeiterKannNichtDisponiertWerden)
             return
                 Result.Failure<Plan>($"Der Mitarbeiter mit der Id {disposition.MitarbeiterId} kann, wegen eingetragener Abwesenheit, nicht disponiert werden.");
 
@@ -72,14 +74,31 @@ public class Plan
         return Result.Success(this);
     }
 
-    public Result<Plan> BeruecksichtigeAbwesenheitVon(Mitarbeiter mitarbeiter)
+    public Result<Plan> VermerkeAusfallVonMitarbeiter(Mitarbeiter mitarbeiter)
     {
-        var istAbwesenheitNochNichtFuerMitarbeiterHinterlegt = !AbwesendeMitarbeiterIds.Contains(mitarbeiter.Id);
+        var istAusfallNochNichtFuerMitarbeiterHinterlegt = !AusgefalleneMitarbeiterIds.Contains(mitarbeiter.Id);
 
-        if (istAbwesenheitNochNichtFuerMitarbeiterHinterlegt)
-            AbwesendeMitarbeiterIds = AbwesendeMitarbeiterIds.Add(mitarbeiter.Id);
+        if (istAusfallNochNichtFuerMitarbeiterHinterlegt)
+            AusgefalleneMitarbeiterIds = AusgefalleneMitarbeiterIds.Add(mitarbeiter.Id);
 
 
         return Result.Success(this);
+    }
+
+    public Result<Plan> BucheMitarbeiterEin(Mitarbeiter mitarbeiter)
+    {
+        AnwesendeMitarbeiterIds = AnwesendeMitarbeiterIds.Add(mitarbeiter.Id);
+
+        return Result.Success(this);
+    }
+
+    private bool MitarbeiterIstAusgefallen(Disposition disposition)
+    {
+        return AusgefalleneMitarbeiterIds.Any(mitarbeiterId => mitarbeiterId == disposition.MitarbeiterId);
+    }
+
+    private bool MitarbeiterIstNichtEingebucht(Disposition disposition)
+    {
+        return AnwesendeMitarbeiterIds.All(mitarbeiterId => mitarbeiterId != disposition.MitarbeiterId);
     }
 }

@@ -19,7 +19,8 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
         QualifizierteTaetigkeitenIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; set; }
+    [JsonInclude]
+    public Guid Id { get; private set; }
 
     public Guid GruppeId { get; private set; }
 
@@ -61,7 +62,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
 
         if (istBereitsFuerTaetigkeitQualifizierung)
             return
-                Result.Failure<Mitarbeiter>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} bereits qualifiziert");
+                Result.Failure<Mitarbeiter>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Bezeichnung} bereits qualifiziert");
 
         QualifizierteTaetigkeitenIds = QualifizierteTaetigkeitenIds.Add(taetigkeit.Id);
 
@@ -106,7 +107,7 @@ public class Mitarbeiter : IEquatable<Mitarbeiter>
             return Result.Success(taetigkeit);
 
         return
-            Result.Failure<Taetigkeit>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Name} nicht qualifiziert.");
+            Result.Failure<Taetigkeit>($"Der Mitarbeiter {Vorname} {Nachname} ist für die Tätigkeit {taetigkeit.Bezeichnung} nicht qualifiziert.");
     }
 
     public override bool Equals(object? obj)

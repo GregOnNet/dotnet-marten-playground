@@ -19,7 +19,7 @@ public class AbwesenheitFuerMitarbeiterErfassenEndpoint
 
         return await Result.Try(() => session.Query<Plan>().Where(plan => plan.Tag == tag).SingleAsync())
                            .OnFailureCompensate(() => Plan.Create(tag))
-                           .Bind(plan => plan.BeruecksichtigeAbwesenheitVon(mitarbeiter))
+                           .Bind(plan => plan.VermerkeAusfallVonMitarbeiter(mitarbeiter))
                            .Map(async plan =>
                                 {
                                     session.Store(plan);
