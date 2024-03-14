@@ -14,8 +14,7 @@ public class Setup
 
                                options.UseDefaultSerialization(
                                                                serializerType: SerializerType.SystemTextJson,
-                                                               collectionStorage: CollectionStorage.AsArray,
-                                                               nonPublicMembersStorage: NonPublicMembersStorage.All
+                                                               collectionStorage: CollectionStorage.AsArray
                                                               );
                                
                                if (environment.IsDevelopment())

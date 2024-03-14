@@ -16,13 +16,15 @@ public class Plan
         AbwesendeMitarbeiterIds = ImmutableHashSet<Guid>.Empty;
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
     public DateOnly Tag { get; }
 
-    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; set; }
+    [JsonInclude]
+    public ImmutableDictionary<Guid, Disposition> Dispositionen { get; private set; }
 
-    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; set; }
+    [JsonInclude]
+    public ImmutableHashSet<Guid> AbwesendeMitarbeiterIds { get; private set; }
 
     public static Result<Plan> Create(DateOnly tag)
     {
